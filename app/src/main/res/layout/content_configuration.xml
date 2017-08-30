@@ -9,6 +9,7 @@
     tools:showIn="@layout/activity_configuration">
 
     <TextView
+        android:id="@+id/station_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
