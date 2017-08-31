@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
@@ -43,6 +46,23 @@ public class ConfigurationActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        final ListView listview = (ListView) findViewById(R.id.listview);
+
+        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+                "Android", "iPhone", "WindowsMobile" };
+
+        final ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < values.length; ++i) {
+            list.add(values[i]);
+        }
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_multiple_choice, list);
+        listview.setAdapter(adapter);
+        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         requestWithSomeHttpHeaders();
     }
@@ -70,9 +90,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                             // response
                             Log.d("Response", response.toString());
 
-                            final TextView mTxtDisplay;
-                            mTxtDisplay = (TextView) findViewById(R.id.station_list);
-                            mTxtDisplay.setText(response.toString());
+//                            final TextView mTxtDisplay;
+//                            mTxtDisplay = (TextView) findViewById(R.id.station_list);
+//                            mTxtDisplay.setText(response.toString());
                         }
                     },
                     new Response.ErrorListener()
