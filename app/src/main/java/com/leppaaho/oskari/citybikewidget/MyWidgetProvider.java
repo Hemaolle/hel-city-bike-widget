@@ -1,7 +1,6 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import android.app.PendingIntent;
