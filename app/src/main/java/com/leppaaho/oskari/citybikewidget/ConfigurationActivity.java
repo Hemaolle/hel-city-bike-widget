@@ -1,6 +1,8 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,7 +13,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.android.volley.AuthFailureError;
@@ -31,8 +35,17 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ConfigurationActivity extends AppCompatActivity {
+
+    ListView listview = null;
+    HashMap<String, String> stationNamesToIds;
+    Context applicationContext;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +62,36 @@ public class ConfigurationActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        applicationContext = getApplicationContext();
+        sharedPreferences = applicationContext.getSharedPreferences("prefs", MODE_PRIVATE);
+
+        listview = (ListView) findViewById(R.id.listview);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                CheckedTextView checkedTextView = (CheckedTextView) view;
+                String targetStation = checkedTextView.getText().toString();
+                boolean checked = checkedTextView.isChecked();
+
+                Set<String> selectedStations =
+                        sharedPreferences.getStringSet("selected_stations", new HashSet<String>());
+                if (checked)  {
+                    Log.i("INFO", "add " + targetStation);
+                    selectedStations.add(targetStation);
+                }
+                else {
+                    selectedStations.remove(targetStation);
+                }
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putStringSet("selected_stations", selectedStations);
+
+                editor.apply();
+            }
+        });
+
+
 
         requestWithSomeHttpHeaders();
     }
@@ -69,6 +112,7 @@ public class ConfigurationActivity extends AppCompatActivity {
             Log.i("INFO", data.toString());
 
             final Activity main = this;
+
             JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                     new Response.Listener<JSONObject>()
                     {
@@ -86,7 +130,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            final ListView listview = (ListView) findViewById(R.id.listview);
+
 
                             final ArrayList<String> list = new ArrayList<String>();
                             for (int i = 0; i < stations.length(); ++i) {

@@ -1,6 +1,8 @@
 package com.leppaaho.oskari.citybikewidget;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -8,6 +10,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -24,14 +27,22 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 MyWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
-            // create some random data
-            int number = (new Random().nextInt(100));
+            Log.i("INFO", "updating widget");
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_layout);
-            Log.w("WidgetExample", String.valueOf(number));
+
+            SharedPreferences preferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+            Set<String> selectedStations = preferences.getStringSet("selected_stations", new HashSet<String>());
+
+            String stationsString = "";
+
+            for (String station : selectedStations) {
+                stationsString += station + "\n";
+            }
+
             // Set the text
-            remoteViews.setTextViewText(R.id.update, String.valueOf(number));
+            remoteViews.setTextViewText(R.id.update, stationsString);
 
             // Register an onClickListener
             Intent intent = new Intent(context, MyWidgetProvider.class);
