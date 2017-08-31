@@ -96,6 +96,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
+
+                            Collections.sort(list);
+
                             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
                                     android.R.layout.simple_list_item_multiple_choice, list);
                             listview.setAdapter(adapter);
