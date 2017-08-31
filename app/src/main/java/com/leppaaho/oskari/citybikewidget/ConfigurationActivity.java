@@ -1,5 +1,6 @@
 package com.leppaaho.oskari.citybikewidget;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,10 +19,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,23 +50,6 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
-        final ListView listview = (ListView) findViewById(R.id.listview);
-
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-                "Android", "iPhone", "WindowsMobile" };
-
-        final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < values.length; ++i) {
-            list.add(values[i]);
-        }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice, list);
-        listview.setAdapter(adapter);
-        listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
         requestWithSomeHttpHeaders();
     }
 
@@ -82,6 +68,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
             Log.i("INFO", data.toString());
 
+            final Activity main = this;
             JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                     new Response.Listener<JSONObject>()
                     {
@@ -90,9 +77,29 @@ public class ConfigurationActivity extends AppCompatActivity {
                             // response
                             Log.d("Response", response.toString());
 
-//                            final TextView mTxtDisplay;
-//                            mTxtDisplay = (TextView) findViewById(R.id.station_list);
-//                            mTxtDisplay.setText(response.toString());
+                            JSONArray stations = null;
+
+                            try {
+                                stations = response.getJSONObject("data")
+                                        .getJSONArray("bikeRentalStations");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            final ListView listview = (ListView) findViewById(R.id.listview);
+
+                            final ArrayList<String> list = new ArrayList<String>();
+                            for (int i = 0; i < stations.length(); ++i) {
+                                try {
+                                    list.add(stations.getJSONObject(i).getString("name"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
+                                    android.R.layout.simple_list_item_multiple_choice, list);
+                            listview.setAdapter(adapter);
+                            listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                         }
                     },
                     new Response.ErrorListener()
