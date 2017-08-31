@@ -1,5 +1,7 @@
 package com.leppaaho.oskari.citybikewidget;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +34,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     int[] allWidgetIds;
     Set<String> selectedStationNames;
     Context context;
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -125,6 +128,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        stationsString += "\nLast updated: " + timeFormat.format(new Date());
 
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
