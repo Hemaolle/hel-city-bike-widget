@@ -142,6 +142,13 @@ public class ConfigurationActivity extends AppCompatActivity {
                                     android.R.layout.simple_list_item_multiple_choice, list);
                             listview.setAdapter(adapter);
                             listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+                            Set<String> selectedStations =
+                                    sharedPreferences.getStringSet("selected_stations", new HashSet<String>());
+
+                            for (String selectedStation : selectedStations) {
+                                listview.setItemChecked(list.indexOf(selectedStation), true);
+                            }
                         }
                     },
                     new Response.ErrorListener()
