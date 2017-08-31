@@ -72,10 +72,10 @@ public class ConfigurationActivity extends AppCompatActivity {
                         sharedPreferences.getStringSet("selected_stations", new HashSet<String>());
                 if (checked)  {
                     Log.i("INFO", "add " + targetStation);
-                    selectedStations.add(targetStation + "|" + stationNamesToIds.get(targetStation));
+                    selectedStations.add(targetStation);
                 }
                 else {
-                    selectedStations.remove(targetStation + "|" + stationNamesToIds.get(targetStation));
+                    selectedStations.remove(targetStation);
                 }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -123,8 +123,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-
 
                             final ArrayList<String> list = new ArrayList<String>();
                             for (int i = 0; i < stations.length(); ++i) {
