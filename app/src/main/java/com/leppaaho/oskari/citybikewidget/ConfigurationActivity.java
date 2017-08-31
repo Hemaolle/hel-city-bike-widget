@@ -37,7 +37,7 @@ import java.util.Set;
 public class ConfigurationActivity extends AppCompatActivity {
 
     ListView listview = null;
-    HashMap<String, String> stationNamesToIds;
+    HashMap<String, String> stationNamesToIds = new HashMap<String, String>();
     Context applicationContext;
     SharedPreferences sharedPreferences;
 
@@ -72,10 +72,10 @@ public class ConfigurationActivity extends AppCompatActivity {
                         sharedPreferences.getStringSet("selected_stations", new HashSet<String>());
                 if (checked)  {
                     Log.i("INFO", "add " + targetStation);
-                    selectedStations.add(targetStation);
+                    selectedStations.add(targetStation + "|" + stationNamesToIds.get(targetStation));
                 }
                 else {
-                    selectedStations.remove(targetStation);
+                    selectedStations.remove(targetStation + "|" + stationNamesToIds.get(targetStation));
                 }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -129,7 +129,10 @@ public class ConfigurationActivity extends AppCompatActivity {
                             final ArrayList<String> list = new ArrayList<String>();
                             for (int i = 0; i < stations.length(); ++i) {
                                 try {
-                                    list.add(stations.getJSONObject(i).getString("name"));
+                                    String stationName = stations.getJSONObject(i).getString("name");
+                                    String stationId = stations.getJSONObject(i).getString("stationId");
+                                    list.add(stationName);
+                                    stationNamesToIds.put(stationName, stationId);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
