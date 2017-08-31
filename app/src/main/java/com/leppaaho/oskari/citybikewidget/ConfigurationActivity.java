@@ -79,6 +79,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
+                editor.clear();
                 editor.putStringSet("selected_stations", selectedStations);
 
                 editor.apply();
