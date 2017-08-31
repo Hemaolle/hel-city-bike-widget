@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -44,7 +45,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 MyWidgetProvider.class);
         allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-        SharedPreferences preferences = context.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         // TODO: Make the order fixed.
         selectedStationNames = preferences.getStringSet("selected_stations", new HashSet<String>());

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -58,9 +59,10 @@ public class ConfigurationActivity extends AppCompatActivity {
         });
 
         applicationContext = getApplicationContext();
-        sharedPreferences = applicationContext.getSharedPreferences("prefs", MODE_PRIVATE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         listview = (ListView) findViewById(R.id.listview);
+
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
