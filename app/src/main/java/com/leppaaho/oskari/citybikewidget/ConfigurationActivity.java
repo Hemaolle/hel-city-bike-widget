@@ -107,8 +107,14 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                 editor.apply();
 
-                remoteViews.setTextViewText(R.id.update, "Update from configuration activity");
-                widgetManager.updateAppWidget(appWidgetId, remoteViews);
+                Intent intent = new Intent(applicationContext, MyWidgetProvider.class);
+                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+                // since it seems the onUpdate() is only fired on that:
+                int[] ids = {appWidgetId};
+
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                sendBroadcast(intent);
 
                 Intent resultValue = new Intent();
                 // Set the results as expected from a 'configure activity'.
