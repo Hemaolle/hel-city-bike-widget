@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CitybikeWidget.iml" filepath="$PROJECT_DIR$/CitybikeWidget.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hel-city-bike-widget.iml" filepath="$PROJECT_DIR$/hel-city-bike-widget.iml" />
     </modules>
   </component>
 </project>
