@@ -1,7 +1,9 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,10 +44,17 @@ public class ConfigurationActivity extends AppCompatActivity {
     HashMap<String, String> stationNamesToIds = new HashMap<String, String>();
     Context applicationContext;
     SharedPreferences sharedPreferences;
+    AppWidgetManager widgetManager;
+    RemoteViews remoteViews;
+    int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Ensures that the widget is not created if the user cancels the configuration.
+        setResult(RESULT_CANCELED);
+
         setContentView(R.layout.activity_configuration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,6 +70,17 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         applicationContext = getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        widgetManager = AppWidgetManager.getInstance(this);
+        remoteViews = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+        if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+            finish();
+            return;
+        }
 
         listview = (ListView) findViewById(R.id.listview);
 
@@ -85,6 +106,16 @@ public class ConfigurationActivity extends AppCompatActivity {
                 editor.putStringSet("selected_stations", selectedStations);
 
                 editor.apply();
+
+                remoteViews.setTextViewText(R.id.update, "Update from configuration activity");
+                widgetManager.updateAppWidget(appWidgetId, remoteViews);
+
+                Intent resultValue = new Intent();
+                // Set the results as expected from a 'configure activity'.
+                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+                setResult(RESULT_OK, resultValue);
+
+                finish();
             }
         });
 
