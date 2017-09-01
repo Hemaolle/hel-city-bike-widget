@@ -91,20 +91,12 @@ public class ConfigurationActivity extends AppCompatActivity {
                 String targetStation = checkedTextView.getText().toString();
                 boolean checked = checkedTextView.isChecked();
 
-                Set<String> selectedStations =
-                        sharedPreferences.getStringSet("selected_stations", new HashSet<String>());
-                if (checked)  {
-                    Log.i("INFO", "add " + targetStation);
-                    selectedStations.add(targetStation);
-                }
-                else {
-                    selectedStations.remove(targetStation);
-                }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.clear();
-                editor.putStringSet("selected_stations", selectedStations);
+                Log.i("INFO", "target station for widget " + appWidgetId + " selected: " + targetStation);
 
+                editor.remove(Integer.toString(appWidgetId));
+                editor.putString(Integer.toString(appWidgetId), targetStation);
                 editor.apply();
 
                 Intent intent = new Intent(applicationContext, MyWidgetProvider.class);
@@ -179,16 +171,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                             Collections.sort(list);
 
                             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
-                                    android.R.layout.simple_list_item_multiple_choice, list);
+                                    android.R.layout.simple_selectable_list_item, list);
                             listview.setAdapter(adapter);
-                            listview.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
-                            Set<String> selectedStations =
-                                    sharedPreferences.getStringSet("selected_stations", new HashSet<String>());
-
-                            for (String selectedStation : selectedStations) {
-                                listview.setItemChecked(list.indexOf(selectedStation), true);
-                            }
+                            listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                         }
                     },
                     new Response.ErrorListener()

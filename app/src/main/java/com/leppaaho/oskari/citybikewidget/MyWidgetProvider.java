@@ -2,6 +2,7 @@ package com.leppaaho.oskari.citybikewidget;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +36,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
     Set<String> selectedStationNames;
     Context context;
     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    HashMap<String, Integer> bikeCounts = new HashMap<String, Integer>();
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -119,6 +122,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
             Log.d("Stations length", "" + stations.length());
             for (int i = 0; i < stations.length(); i++) {
                 JSONObject station = stations.getJSONObject(i);
+                bikeCounts.put(station.getString("name"), station.getInt("bikesAvailable"));
                 for (String selectedStationName: selectedStationNames) {
                     if (station.getString("name").equals(selectedStationName)) {
                         stationsString += selectedStationName + ": " + station.getInt("bikesAvailable") + "\n";
@@ -131,12 +135,28 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
         stationsString += "\nLast updated: " + timeFormat.format(new Date());
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_layout);
 
-            // Set the text
-            remoteViews.setTextViewText(R.id.update, stationsString);
+            Log.i("INFO", "get preferences for widget id: " + widgetId);
+
+            String targetStation = preferences.getString(Integer.toString(widgetId), "");
+
+            Log.i("INFO", "wigget " + widgetId + " target station: " + targetStation);
+
+            // TODO: if should not be needed
+            if (bikeCounts.containsKey(targetStation)) {
+                // Set the text
+                remoteViews.setTextViewText(
+                        R.id.update, targetStation + ": " +
+                                Integer.toString(bikeCounts.get(targetStation)));
+            }
+            else {
+                remoteViews.setTextViewText(R.id.update, "No target station selected");
+            }
 
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
