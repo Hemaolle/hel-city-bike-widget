@@ -70,7 +70,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                     0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
     }
@@ -150,12 +150,12 @@ public class MyWidgetProvider extends AppWidgetProvider {
             // TODO: if should not be needed
             if (bikeCounts.containsKey(targetStation)) {
                 // Set the text
+                remoteViews.setTextViewText(R.id.stationName, targetStation);
                 remoteViews.setTextViewText(
-                        R.id.update, targetStation + ": " +
-                                Integer.toString(bikeCounts.get(targetStation)));
+                        R.id.bikeCount, ": " + Integer.toString(bikeCounts.get(targetStation)));
             }
             else {
-                remoteViews.setTextViewText(R.id.update, "No target station selected");
+                remoteViews.setTextViewText(R.id.stationName, "No target station selected");
             }
 
             appWidgetManager.updateAppWidget(widgetId, remoteViews);

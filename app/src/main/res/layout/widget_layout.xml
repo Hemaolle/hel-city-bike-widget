@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dip"
-    android:background="@drawable/myshape" >
+    android:layout_margin="0dip"
+    android:background="#00ffffff"
+    android:orientation="vertical"
+    android:gravity="top">
 
     <TextView
-        android:id="@+id/update"
-        style="@android:style/TextAppearance.Medium"
+        android:id="@+id/bikeCount"
+        android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="4dip"
-        android:gravity="start|center_vertical"
+        android:layout_margin="2dip"
+        android:gravity="center|center_vertical"
         android:text="Static Text"
-        android:textAlignment="textStart"
-        android:textColor="@android:color/background_light"></TextView>
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/stationName"
+            android:textSize="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="0dip"
+            android:gravity="center_horizontal|bottom"
+            android:text="Static Text"
+            android:textAlignment="center"
+            android:textColor="@android:color/background_light" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
