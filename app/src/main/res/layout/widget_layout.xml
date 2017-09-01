@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:gravity="top">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30sp"
         android:orientation="horizontal">
@@ -22,16 +22,16 @@
 
         <TextView
             android:id="@+id/bikeCount"
-            android:textSize="20sp"
-            android:layout_width="55sp"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
             android:layout_margin="2dip"
-            android:gravity="right|center_vertical"
+            android:gravity="start|center_vertical"
             android:text="Static Text"
-            android:textAlignment="textEnd"
+            android:textAlignment="textStart"
             android:textColor="@android:color/background_light" />
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

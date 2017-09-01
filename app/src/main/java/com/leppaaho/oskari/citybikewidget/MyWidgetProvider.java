@@ -151,8 +151,16 @@ public class MyWidgetProvider extends AppWidgetProvider {
             if (bikeCounts.containsKey(targetStation)) {
                 // Set the text
                 remoteViews.setTextViewText(R.id.stationName, targetStation);
+                int bikeCount = bikeCounts.get(targetStation);
+                String warning = "";
+                if (0 < bikeCount && bikeCount < 4) {
+                    warning = " !";
+                }
+                if (bikeCount == 0) {
+                    warning = " !!";
+                }
                 remoteViews.setTextViewText(
-                        R.id.bikeCount, ": " + Integer.toString(bikeCounts.get(targetStation)));
+                        R.id.bikeCount, ": " + Integer.toString(bikeCounts.get(targetStation)) + warning);
             }
             else {
                 remoteViews.setTextViewText(R.id.stationName, "No target station selected");
