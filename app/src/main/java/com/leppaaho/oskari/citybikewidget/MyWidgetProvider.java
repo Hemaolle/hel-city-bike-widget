@@ -38,6 +38,26 @@ public class MyWidgetProvider extends AppWidgetProvider {
     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
     HashMap<String, Integer> bikeCounts = new HashMap<String, Integer>();
 
+    private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
+                                 int[] appWidgetIds) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        for (int widgetId : appWidgetIds) {
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_layout);
+
+            Log.i("INFO", "get preferences for widget id: " + widgetId);
+
+            String targetStation = preferences.getString(Integer.toString(widgetId), "");
+            int cachedBikeCount = preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
+
+            Log.i("INFO", "wigget " + widgetId + " target station: " + targetStation);
+
+            updateStationInfo(remoteViews, targetStation, cachedBikeCount);
+
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);
+        }
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -102,8 +122,19 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        Log.d("ERROR","error => "+error.toString());
+
+                        // Looks like we may get an error response when rebooting the device (PIN
+                        // not entered yet). The widget update seems to be called earlier than
+                        // getting a BOOT_COMPLETE Intent though (resulting in this error then),
+                        // so loading the data from the cache here should handle updating the UI
+                        // on device reboot quicker. And no need to listen to a BOOT_COMPLETE Intent.
+
+                        // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
+                        // data once we have network on reboot.
+
+                        Log.i("INFO","Bike status request failed, loading from cache. Error: => "+error.toString());
+
+                        reloadFromCache(context, appWidgetManager, allWidgetIds);
                     }
                 }
         );
@@ -149,18 +180,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             // TODO: if should not be needed
             if (bikeCounts.containsKey(targetStation)) {
-                // Set the text
-                remoteViews.setTextViewText(R.id.stationName, targetStation);
                 int bikeCount = bikeCounts.get(targetStation);
-                String warning = "";
-                if (0 < bikeCount && bikeCount < 4) {
-                    warning = " !";
-                }
-                if (bikeCount == 0) {
-                    warning = " !!";
-                }
-                remoteViews.setTextViewText(
-                        R.id.bikeCount, ": " + Integer.toString(bikeCounts.get(targetStation)) + warning);
+                storeCount(preferences, widgetId, bikeCount);
+                updateStationInfo(remoteViews, targetStation, bikeCount);
             }
             else {
                 remoteViews.setTextViewText(R.id.stationName, "No target station selected");
@@ -169,5 +191,27 @@ public class MyWidgetProvider extends AppWidgetProvider {
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
 
+    }
+
+    private void storeCount(SharedPreferences preferences, int widgetId, int bikeCount) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(Integer.toString(widgetId) + "_cached_count");
+        editor.putInt(Integer.toString(widgetId) + "_cached_count", bikeCount);
+        editor.apply();
+    }
+
+    private void updateStationInfo(RemoteViews remoteViews, String targetStation, int bikeCount) {
+        // Set the text
+        remoteViews.setTextViewText(R.id.stationName, targetStation);
+
+        String warning = "";
+        if (0 < bikeCount && bikeCount < 4) {
+            warning = " !";
+        }
+        if (bikeCount == 0) {
+            warning = " !!";
+        }
+        remoteViews.setTextViewText(
+                R.id.bikeCount, ": " + Integer.toString(bikeCount) + warning);
     }
 }
