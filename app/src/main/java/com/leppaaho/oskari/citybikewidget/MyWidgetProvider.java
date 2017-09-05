@@ -28,6 +28,8 @@ import org.json.JSONObject;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
+    private static final String TAG = MyWidgetProvider.class.getName();
+
     AppWidgetManager appWidgetManager;
     int[] allWidgetIds;
     Set<String> selectedStationNames;
@@ -42,12 +44,12 @@ public class MyWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_layout);
 
-            Log.i("INFO", "get preferences for widget id: " + widgetId);
+            Log.i(TAG, "get preferences for widget id: " + widgetId);
 
             String targetStation = preferences.getString(Integer.toString(widgetId), "");
             int cachedBikeCount = preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
 
-            Log.i("INFO", "wigget " + widgetId + " target station: " + targetStation);
+            Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
 
             updateStationInfo(remoteViews, targetStation, cachedBikeCount);
 
@@ -60,7 +62,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                          int[] appWidgetIds) {
         this.context = context;
         this.appWidgetManager = appWidgetManager;
-        Log.i("INFO", "updating widget");
+        Log.i(TAG, "updating widget");
 
         // Get all ids
         ComponentName thisWidget = new ComponentName(context,
@@ -104,7 +106,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
             e.printStackTrace();
         }
 
-        Log.i("INFO", data.toString());
+        Log.i(TAG, data.toString());
 
         JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                 new Response.Listener<JSONObject>()
@@ -128,7 +130,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                         // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
                         // data once we have network on reboot.
 
-                        Log.i("INFO","Bike status request failed, loading from cache. Error: => "+error.toString());
+                        Log.i(TAG, "Bike status request failed, loading from cache. Error: => "+error.toString());
 
                         reloadFromCache(context, appWidgetManager, allWidgetIds);
                     }
@@ -139,13 +141,13 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     public void onBikeDataReceived(JSONObject response) {
         // response
-        Log.d("Response", response.toString());
+        Log.d(TAG, "Response: " + response.toString());
 
         try {
             JSONArray stations =
                     response.getJSONObject("data")
                             .getJSONArray("bikeRentalStations");
-            Log.d("Stations length", "" + stations.length());
+            Log.d(TAG, "Stations length: " + stations.length());
             for (int i = 0; i < stations.length(); i++) {
                 JSONObject station = stations.getJSONObject(i);
                 bikeCounts.put(station.getString("name"), station.getInt("bikesAvailable"));
@@ -160,11 +162,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_layout);
 
-            Log.i("INFO", "get preferences for widget id: " + widgetId);
+            Log.i(TAG, "get preferences for widget id: " + widgetId);
 
             String targetStation = preferences.getString(Integer.toString(widgetId), "");
 
-            Log.i("INFO", "wigget " + widgetId + " target station: " + targetStation);
+            Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
 
             // TODO: if should not be needed
             if (bikeCounts.containsKey(targetStation)) {

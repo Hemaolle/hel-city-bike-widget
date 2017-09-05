@@ -33,6 +33,8 @@ import java.util.HashMap;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
+    private static final String TAG = ConfigurationActivity.class.getName();
+
     ListView listview = null;
     HashMap<String, String> stationNamesToIds = new HashMap<>();
     Context applicationContext;
@@ -74,7 +76,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                Log.i("INFO", "target station for widget " + appWidgetId + " selected: " + targetStation);
+                Log.i(TAG, "target station for widget " + appWidgetId + " selected: " + targetStation);
 
                 editor.remove(Integer.toString(appWidgetId));
                 editor.putString(Integer.toString(appWidgetId), targetStation);
@@ -116,7 +118,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Log.i("INFO", data.toString());
+            Log.i(TAG, data.toString());
 
             final Activity main = this;
 
@@ -126,7 +128,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             // response
-                            Log.d("Response", response.toString());
+                            Log.d(TAG, "Response: " + response.toString());
 
                             JSONArray stations = null;
 
@@ -162,7 +164,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // TODO Auto-generated method stub
-                            Log.d("ERROR","error => "+error.toString());
+                            Log.d(TAG, "error => "+error.toString());
                         }
                     }
             );
