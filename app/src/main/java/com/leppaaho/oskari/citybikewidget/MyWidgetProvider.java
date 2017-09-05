@@ -30,13 +30,11 @@ import org.json.JSONObject;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
-    private static final String ACTION_CLICK = "ACTION_CLICK";
     AppWidgetManager appWidgetManager;
     int[] allWidgetIds;
     Set<String> selectedStationNames;
     Context context;
-    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-    HashMap<String, Integer> bikeCounts = new HashMap<String, Integer>();
+    HashMap<String, Integer> bikeCounts = new HashMap<>();
 
     private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
                                  int[] appWidgetIds) {
@@ -144,8 +142,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void onBikeDataReceived(JSONObject response) {
         // response
         Log.d("Response", response.toString());
-        int availableBikes = 0;
-        String stationsString = "";
+
         try {
             JSONArray stations =
                     response.getJSONObject("data")
@@ -154,17 +151,10 @@ public class MyWidgetProvider extends AppWidgetProvider {
             for (int i = 0; i < stations.length(); i++) {
                 JSONObject station = stations.getJSONObject(i);
                 bikeCounts.put(station.getString("name"), station.getInt("bikesAvailable"));
-                for (String selectedStationName: selectedStationNames) {
-                    if (station.getString("name").equals(selectedStationName)) {
-                        stationsString += selectedStationName + ": " + station.getInt("bikesAvailable") + "\n";
-                    }
-                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        stationsString += "\nLast updated: " + timeFormat.format(new Date());
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 

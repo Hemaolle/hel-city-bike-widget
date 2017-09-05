@@ -35,13 +35,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
     ListView listview = null;
-    HashMap<String, String> stationNamesToIds = new HashMap<String, String>();
+    HashMap<String, String> stationNamesToIds = new HashMap<>();
     Context applicationContext;
     SharedPreferences sharedPreferences;
     AppWidgetManager widgetManager;
@@ -89,7 +87,6 @@ public class ConfigurationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 CheckedTextView checkedTextView = (CheckedTextView) view;
                 String targetStation = checkedTextView.getText().toString();
-                boolean checked = checkedTextView.isChecked();
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -101,6 +98,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(applicationContext, MyWidgetProvider.class);
                 intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
                 // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
                 // since it seems the onUpdate() is only fired on that:
                 int[] ids = {appWidgetId};
@@ -109,6 +107,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 sendBroadcast(intent);
 
                 Intent resultValue = new Intent();
+
                 // Set the results as expected from a 'configure activity'.
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
                 setResult(RESULT_OK, resultValue);
@@ -116,8 +115,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
 
         requestWithSomeHttpHeaders();
     }
@@ -191,6 +188,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_configuration, menu);
         return true;
@@ -198,6 +196,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
