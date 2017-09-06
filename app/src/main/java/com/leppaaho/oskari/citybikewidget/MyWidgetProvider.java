@@ -1,6 +1,7 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import android.app.PendingIntent;
@@ -62,7 +63,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void requestBikeCount() {
         BikeApi.getStations(context, new BikeApi.BikeApiResponseListener() {
             @Override
-            public void onResponse(BikeApiResponse response) {
+            public void onResponse(List<BikeStation> stations) {
                 for (int widgetId : allWidgetIds) {
                     RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                             R.layout.widget_layout);
@@ -75,7 +76,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                     Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
 
                     boolean targetFound = false;
-                    for (BikeStation s : response.stations) {
+                    for (BikeStation s : stations) {
                         if (s.name.equals(targetStation)) {
                             targetFound = true;
                             storeCount(preferences, widgetId, s.bikesAvailable);

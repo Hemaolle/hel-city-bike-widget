@@ -16,13 +16,14 @@ import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class BikeApi {
 
     private static final String TAG = ConfigurationActivity.class.getName();
 
     public interface BikeApiResponseListener {
-        void onResponse(BikeApiResponse response);
+        void onResponse(List<BikeStation > stations);
         void onError(String error);
     }
 
@@ -41,44 +42,20 @@ public class BikeApi {
 
         Log.i(TAG, data.toString());
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, bikeApi, data,
-                new Response.Listener<JSONObject>()
+        GsonRequest<BikeApiResponse> postRequest = new GsonRequest<>(
+                Request.Method.POST, bikeApi, data, BikeApiResponse.class,
+                new Response.Listener<BikeApiResponse>()
                 {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        // response
-                        Log.d(TAG, "Response: " + response.toString());
-
-                        JSONArray stations = null;
-
-                        try {
-                            stations = response.getJSONObject("data")
-                                    .getJSONArray("bikeRentalStations");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        final BikeApiResponse bikeApiResponse = new BikeApiResponse();
-                        for (int i = 0; i < stations.length(); ++i) {
-                            try {
-                                BikeStation station = new BikeStation();
-                                JSONObject jsonStation = stations.getJSONObject(i);
-                                station.name = jsonStation.getString("name");
-                                station.bikesAvailable = jsonStation.getInt("bikesAvailable");
-                                bikeApiResponse.stations.add(station);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        Collections.sort(bikeApiResponse.stations, new Comparator<BikeStation>() {
+                    public void onResponse(BikeApiResponse response) {
+                        Collections.sort(response.data.stations, new Comparator<BikeStation>() {
                             @Override
                             public int compare(BikeStation s1, BikeStation s2) {
                                 return s1.name.compareTo(s2.name);
                             }
                         });
 
-                        listener.onResponse(bikeApiResponse);
+                        listener.onResponse(response.data.stations);
                     }
                 },
                 new Response.ErrorListener()

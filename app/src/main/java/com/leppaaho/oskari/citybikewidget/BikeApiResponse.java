@@ -1,13 +1,7 @@
 package com.leppaaho.oskari.citybikewidget;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 public class BikeApiResponse {
-
-    public List<BikeStation> stations;
-
-    public BikeApiResponse() {
-        stations = new ArrayList<>();
-    }
+    public BikeApiData data;
 }

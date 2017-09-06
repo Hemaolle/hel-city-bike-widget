@@ -103,9 +103,9 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         BikeApi.getStations(this, new BikeApi.BikeApiResponseListener() {
             @Override
-            public void onResponse(BikeApiResponse response) {
+            public void onResponse(List<BikeStation> stations) {
                 List<String> stationNames = new ArrayList<>();
-                for (BikeStation s : response.stations) {
+                for (BikeStation s : stations) {
                     stationNames.add(s.name);
                 }
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(main,
