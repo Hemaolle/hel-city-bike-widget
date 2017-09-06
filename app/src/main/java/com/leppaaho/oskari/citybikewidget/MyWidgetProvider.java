@@ -15,17 +15,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class MyWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = MyWidgetProvider.class.getName();
@@ -74,7 +63,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         // TODO: Make the order fixed.
         selectedStationNames = preferences.getStringSet("selected_stations", new HashSet<String>());
 
-        requestBikeCount(context, selectedStationNames);
+        requestBikeCount();
 
         for (int widgetId : allWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
@@ -93,94 +82,56 @@ public class MyWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public void requestBikeCount(final Context context, final Set<String> selectedStationNames) {
-        RequestQueue queue = Volley.newRequestQueue(context);
-        String bikeApi = context.getString(R.string.bikeApi);
-        JSONObject data = null;
+    public void requestBikeCount() {
+        BikeApi.getStations(context, new BikeApi.BikeApiResponseListener() {
+            @Override
+            public void onResponse(BikeApiResponse response) {
+                for (int widgetId : allWidgetIds) {
+                    RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+                            R.layout.widget_layout);
 
-        try {
-            data = new JSONObject(
-                    "{ \"query\": \"{ bikeRentalStations { name id bikesAvailable } }\" }\""
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+                    Log.i(TAG, "get preferences for widget id: " + widgetId);
 
-        Log.i(TAG, data.toString());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                    String targetStation = preferences.getString(Integer.toString(widgetId), "");
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, bikeApi, data,
-                new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        onBikeDataReceived(response);
+                    Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
+
+                    boolean targetFound = false;
+                    for (BikeStation s : response.stations) {
+                        if (s.name.equals(targetStation)) {
+                            targetFound = true;
+                            storeCount(preferences, widgetId, s.bikesAvailable);
+                            updateStationInfo(remoteViews, targetStation, s.bikesAvailable);
+                            break;
+                        }
                     }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
 
-                        // Looks like we may get an error response when rebooting the device (PIN
-                        // not entered yet). The widget update seems to be called earlier than
-                        // getting a BOOT_COMPLETE Intent though (resulting in this error then),
-                        // so loading the data from the cache here should handle updating the UI
-                        // on device reboot quicker. And no need to listen to a BOOT_COMPLETE Intent.
-
-                        // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
-                        // data once we have network on reboot.
-
-                        Log.i(TAG, "Bike status request failed, loading from cache. Error: => "+error.toString());
-
-                        reloadFromCache(context, appWidgetManager, allWidgetIds);
+                    if (!targetFound) {
+                        Log.e(TAG, "No target station selected");
+                        remoteViews.setTextViewText(R.id.stationName, "No target station selected");
                     }
+
+                    appWidgetManager.updateAppWidget(widgetId, remoteViews);
                 }
-        );
-        queue.add(postRequest);
-    }
-
-    public void onBikeDataReceived(JSONObject response) {
-        // response
-        Log.d(TAG, "Response: " + response.toString());
-
-        try {
-            JSONArray stations =
-                    response.getJSONObject("data")
-                            .getJSONArray("bikeRentalStations");
-            Log.d(TAG, "Stations length: " + stations.length());
-            for (int i = 0; i < stations.length(); i++) {
-                JSONObject station = stations.getJSONObject(i);
-                bikeCounts.put(station.getString("name"), station.getInt("bikesAvailable"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        for (int widgetId : allWidgetIds) {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_layout);
-
-            Log.i(TAG, "get preferences for widget id: " + widgetId);
-
-            String targetStation = preferences.getString(Integer.toString(widgetId), "");
-
-            Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
-
-            // TODO: if should not be needed
-            if (bikeCounts.containsKey(targetStation)) {
-                int bikeCount = bikeCounts.get(targetStation);
-                storeCount(preferences, widgetId, bikeCount);
-                updateStationInfo(remoteViews, targetStation, bikeCount);
-            }
-            else {
-                remoteViews.setTextViewText(R.id.stationName, "No target station selected");
             }
 
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
+            @Override
+            public void onError(String error) {
+                // Looks like we may get an error response when rebooting the device (PIN
+                // not entered yet). The widget update seems to be called earlier than
+                // getting a BOOT_COMPLETE Intent though (resulting in this error then),
+                // so loading the data from the cache here should handle updating the UI
+                // on device reboot quicker. And no need to listen to a BOOT_COMPLETE Intent.
 
+                // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
+                // data once we have network on reboot.
+
+                Log.i(TAG, "Bike status request failed, loading from cache. Error: => " + error.toString());
+
+                reloadFromCache(context, appWidgetManager, allWidgetIds);
+            }
+        });
     }
 
     private void storeCount(SharedPreferences preferences, int widgetId, int bikeCount) {

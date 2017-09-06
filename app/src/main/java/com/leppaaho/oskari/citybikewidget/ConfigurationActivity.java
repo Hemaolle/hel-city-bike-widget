@@ -14,20 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
@@ -106,73 +95,29 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
-        requestWithSomeHttpHeaders();
+        requestAllStations();
     }
 
-    public void requestWithSomeHttpHeaders() {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String bikeApi = getString(R.string.bikeApi);
-        JSONObject data = null;
-
-        try {
-            data = new JSONObject(
-                    "{\"query\": \"{ bikeRentalStations { name stationId } }\" }"
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.i(TAG, data.toString());
-
+    public void requestAllStations() {
         final Activity main = this;
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, bikeApi, data,
-                new Response.Listener<JSONObject>()
-                {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // response
-                        Log.d(TAG, "Response: " + response.toString());
-
-                        JSONArray stations = null;
-
-                        try {
-                            stations = response.getJSONObject("data")
-                                    .getJSONArray("bikeRentalStations");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        final ArrayList<String> list = new ArrayList<String>();
-                        for (int i = 0; i < stations.length(); ++i) {
-                            try {
-                                String stationName = stations.getJSONObject(i).getString("name");
-                                String stationId = stations.getJSONObject(i).getString("stationId");
-                                list.add(stationName);
-                                stationNamesToIds.put(stationName, stationId);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        Collections.sort(list);
-
-                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
-                                android.R.layout.simple_selectable_list_item, list);
-                        allStationsListView.setAdapter(adapter);
-                        allStationsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        Log.d(TAG, "error => "+error.toString());
-                    }
+        BikeApi.getStations(this, new BikeApi.BikeApiResponseListener() {
+            @Override
+            public void onResponse(BikeApiResponse response) {
+                List<String> stationNames = new ArrayList<>();
+                for (BikeStation s : response.stations) {
+                    stationNames.add(s.name);
                 }
-        );
-        queue.add(postRequest);
+                final ArrayAdapter<String> adapter = new ArrayAdapter<>(main,
+                        android.R.layout.simple_selectable_list_item,  stationNames);
+                allStationsListView.setAdapter(adapter);
+                allStationsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            }
 
+            @Override
+            public void onError(String error) {
+                Log.d(TAG, "error => " + error);
+            }
+        });
     }
 }
