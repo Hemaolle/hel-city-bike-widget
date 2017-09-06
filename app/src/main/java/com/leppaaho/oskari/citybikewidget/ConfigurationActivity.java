@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ConfigurationActivity extends AppCompatActivity {
@@ -23,7 +22,6 @@ public class ConfigurationActivity extends AppCompatActivity {
     private static final String TAG = ConfigurationActivity.class.getName();
 
     ListView allStationsListView;
-    HashMap<String, String> stationNamesToIds = new HashMap<>();
     Context applicationContext;
     SharedPreferences sharedPreferences;
     AppWidgetManager widgetManager;
