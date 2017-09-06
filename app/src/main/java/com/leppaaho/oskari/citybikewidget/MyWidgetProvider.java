@@ -1,8 +1,6 @@
 package com.leppaaho.oskari.citybikewidget;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -21,7 +19,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     AppWidgetManager appWidgetManager;
     int[] allWidgetIds;
-    Set<String> selectedStationNames;
     Context context;
 
     @Override
@@ -35,11 +32,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
         ComponentName thisWidget = new ComponentName(context,
                 MyWidgetProvider.class);
         allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        // TODO: Make the order fixed.
-        selectedStationNames = preferences.getStringSet("selected_stations", new HashSet<String>());
 
         requestBikeCount();
 
