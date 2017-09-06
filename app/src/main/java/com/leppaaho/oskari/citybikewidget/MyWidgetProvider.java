@@ -1,6 +1,5 @@
 package com.leppaaho.oskari.citybikewidget;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +22,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
     int[] allWidgetIds;
     Set<String> selectedStationNames;
     Context context;
-    HashMap<String, Integer> bikeCounts = new HashMap<>();
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
