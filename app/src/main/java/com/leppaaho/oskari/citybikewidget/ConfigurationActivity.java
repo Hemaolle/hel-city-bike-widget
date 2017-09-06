@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RemoteViews;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,7 +38,6 @@ public class ConfigurationActivity extends AppCompatActivity {
     Context applicationContext;
     SharedPreferences sharedPreferences;
     AppWidgetManager widgetManager;
-    RemoteViews remoteViews;
     int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
@@ -54,7 +52,6 @@ public class ConfigurationActivity extends AppCompatActivity {
         applicationContext = getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         widgetManager = AppWidgetManager.getInstance(this);
-        remoteViews = new RemoteViews(this.getPackageName(), R.layout.widget_layout);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
