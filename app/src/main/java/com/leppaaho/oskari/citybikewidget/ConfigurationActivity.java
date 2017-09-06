@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.RemoteViews;
 
@@ -35,7 +34,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     private static final String TAG = ConfigurationActivity.class.getName();
 
-    ListView listview = null;
+    ListView allStationsListView;
     HashMap<String, String> stationNamesToIds = new HashMap<>();
     Context applicationContext;
     SharedPreferences sharedPreferences;
@@ -66,38 +65,47 @@ public class ConfigurationActivity extends AppCompatActivity {
             return;
         }
 
-        listview = (ListView) findViewById(R.id.listview);
+        allStationsListView = (ListView) findViewById(R.id.listview);
 
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        allStationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long l) {
-                String targetStation = adapter.getItemAtPosition(position).toString();
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                String selectedStation = adapter.getItemAtPosition(position).toString();
 
+                Log.i(TAG, "target station for widget " + appWidgetId + " selected: " + selectedStation);
+
+                saveAppWidgetStation(selectedStation, appWidgetId);
+                sendAppWidgetUpdateIntent(appWidgetId);
+                setResultOk();
+                finish();
+            }
+
+            private void saveAppWidgetStation(String stationName, int appWidgetId) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                Log.i(TAG, "target station for widget " + appWidgetId + " selected: " + targetStation);
-
                 editor.remove(Integer.toString(appWidgetId));
-                editor.putString(Integer.toString(appWidgetId), targetStation);
+                editor.putString(Integer.toString(appWidgetId), stationName);
                 editor.apply();
+            }
 
+            // Triggers the onUpdate method in the WidgetProvider.
+            private void sendAppWidgetUpdateIntent(int appWidgetId) {
                 Intent intent = new Intent(applicationContext, MyWidgetProvider.class);
                 intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
                 // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
-                // since it seems the onUpdate() is only fired on that:
+                // since it seems the onUpdate() is only fired on that.
                 int[] ids = {appWidgetId};
 
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
                 sendBroadcast(intent);
+            }
 
+            // AppWidgetHost (the home screen) will read the result. RESULT_OK from a configuration
+            // activity should result in displaying the widget after finishing the configuration.
+            private void setResultOk() {
                 Intent resultValue = new Intent();
-
-                // Set the results as expected from a 'configure activity'.
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
                 setResult(RESULT_OK, resultValue);
-
-                finish();
             }
         });
 
@@ -154,8 +162,8 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
                                     android.R.layout.simple_selectable_list_item, list);
-                            listview.setAdapter(adapter);
-                            listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                            allStationsListView.setAdapter(adapter);
+                            allStationsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                         }
                     },
                     new Response.ErrorListener()
