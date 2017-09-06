@@ -109,70 +109,70 @@ public class ConfigurationActivity extends AppCompatActivity {
         requestWithSomeHttpHeaders();
     }
 
-        public void requestWithSomeHttpHeaders() {
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql";
-            JSONObject data = null;
+    public void requestWithSomeHttpHeaders() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql";
+        JSONObject data = null;
 
-            try {
-                data = new JSONObject(
-                        "{\"query\": \"{ bikeRentalStations { name stationId } }\" }"
-                );
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            data = new JSONObject(
+                    "{\"query\": \"{ bikeRentalStations { name stationId } }\" }"
+            );
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            Log.i(TAG, data.toString());
+        Log.i(TAG, data.toString());
 
-            final Activity main = this;
+        final Activity main = this;
 
-            JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
-                    new Response.Listener<JSONObject>()
-                    {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // response
-                            Log.d(TAG, "Response: " + response.toString());
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // response
+                        Log.d(TAG, "Response: " + response.toString());
 
-                            JSONArray stations = null;
+                        JSONArray stations = null;
 
+                        try {
+                            stations = response.getJSONObject("data")
+                                    .getJSONArray("bikeRentalStations");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        final ArrayList<String> list = new ArrayList<String>();
+                        for (int i = 0; i < stations.length(); ++i) {
                             try {
-                                stations = response.getJSONObject("data")
-                                        .getJSONArray("bikeRentalStations");
+                                String stationName = stations.getJSONObject(i).getString("name");
+                                String stationId = stations.getJSONObject(i).getString("stationId");
+                                list.add(stationName);
+                                stationNamesToIds.put(stationName, stationId);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
-                            final ArrayList<String> list = new ArrayList<String>();
-                            for (int i = 0; i < stations.length(); ++i) {
-                                try {
-                                    String stationName = stations.getJSONObject(i).getString("name");
-                                    String stationId = stations.getJSONObject(i).getString("stationId");
-                                    list.add(stationName);
-                                    stationNamesToIds.put(stationName, stationId);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            Collections.sort(list);
-
-                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
-                                    android.R.layout.simple_selectable_list_item, list);
-                            allStationsListView.setAdapter(adapter);
-                            allStationsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                         }
-                    },
-                    new Response.ErrorListener()
-                    {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // TODO Auto-generated method stub
-                            Log.d(TAG, "error => "+error.toString());
-                        }
+
+                        Collections.sort(list);
+
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(main,
+                                android.R.layout.simple_selectable_list_item, list);
+                        allStationsListView.setAdapter(adapter);
+                        allStationsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                     }
-            );
-            queue.add(postRequest);
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        Log.d(TAG, "error => "+error.toString());
+                    }
+                }
+        );
+        queue.add(postRequest);
 
-        }
+    }
 }
