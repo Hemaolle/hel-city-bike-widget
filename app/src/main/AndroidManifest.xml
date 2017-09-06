@@ -18,11 +18,13 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="MyWidgetProvider"
-            android:label="Example Widget">
+        <receiver android:name="com.leppaaho.oskari.citybikewidget.MyWidgetProvider"
+            android:label="Example Widget"
+            >
             <intent-filter >
                 <action
                     android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
 
             <meta-data
@@ -33,5 +35,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
 </manifest>

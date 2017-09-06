@@ -38,6 +38,20 @@ public class MyWidgetProvider extends AppWidgetProvider {
     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
     HashMap<String, Integer> bikeCounts = new HashMap<String, Integer>();
 
+    @Override
+    public void onReceive(Context mContext, Intent intent) {
+        super.onReceive(mContext, intent);
+
+        if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+            AppWidgetManager widgetManager = AppWidgetManager.getInstance(mContext);
+            ComponentName widgetComponent = new ComponentName(mContext, MyWidgetProvider.class);
+            int[] appWidgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+
+            Log.i("INFO", "Update from boot");
+            reloadFromCache(mContext, widgetManager, appWidgetIds);
+        }
+    }
+
     private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
                                  int[] appWidgetIds) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
