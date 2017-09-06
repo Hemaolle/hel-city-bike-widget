@@ -70,9 +70,8 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CheckedTextView checkedTextView = (CheckedTextView) view;
-                String targetStation = checkedTextView.getText().toString();
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long l) {
+                String targetStation = adapter.getItemAtPosition(position).toString();
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
