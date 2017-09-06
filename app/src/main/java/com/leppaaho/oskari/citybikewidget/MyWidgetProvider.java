@@ -95,7 +95,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     public void requestBikeCount(final Context context, final Set<String> selectedStationNames) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql";
+        String bikeApi = context.getString(R.string.bikeApi);
         JSONObject data = null;
 
         try {
@@ -108,7 +108,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
         Log.i(TAG, data.toString());
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, bikeApi, data,
                 new Response.Listener<JSONObject>()
                 {
                     @Override

@@ -111,7 +111,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     public void requestWithSomeHttpHeaders() {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql";
+        String bikeApi = getString(R.string.bikeApi);
         JSONObject data = null;
 
         try {
@@ -126,7 +126,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         final Activity main = this;
 
-        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, url, data,
+        JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST, bikeApi, data,
                 new Response.Listener<JSONObject>()
                 {
                     @Override
