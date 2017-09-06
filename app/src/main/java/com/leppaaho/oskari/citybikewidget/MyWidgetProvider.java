@@ -25,27 +25,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
     Context context;
     HashMap<String, Integer> bikeCounts = new HashMap<>();
 
-    private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
-                                 int[] appWidgetIds) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        for (int widgetId : appWidgetIds) {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_layout);
-
-            Log.i(TAG, "get preferences for widget id: " + widgetId);
-
-            String targetStation = preferences.getString(Integer.toString(widgetId), "");
-            int cachedBikeCount = preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
-
-            Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
-
-            updateStationInfo(remoteViews, targetStation, cachedBikeCount);
-
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
-    }
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
@@ -154,5 +133,26 @@ public class MyWidgetProvider extends AppWidgetProvider {
         }
         remoteViews.setTextViewText(
                 R.id.bikeCount, ": " + Integer.toString(bikeCount) + warning);
+    }
+
+    private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
+                                 int[] appWidgetIds) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        for (int widgetId : appWidgetIds) {
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_layout);
+
+            Log.i(TAG, "get preferences for widget id: " + widgetId);
+
+            String targetStation = preferences.getString(Integer.toString(widgetId), "");
+            int cachedBikeCount = preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
+
+            Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
+
+            updateStationInfo(remoteViews, targetStation, cachedBikeCount);
+
+            appWidgetManager.updateAppWidget(widgetId, remoteViews);
+        }
     }
 }
