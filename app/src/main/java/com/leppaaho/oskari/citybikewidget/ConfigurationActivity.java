@@ -111,6 +111,18 @@ public class ConfigurationActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 Log.d(TAG, "error => " + error);
+
+                ErrorDialog.show(ConfigurationActivity.this, new ErrorDialog.ResultListener() {
+                    @Override
+                    public void onCancel() {
+                        finish();
+                    }
+
+                    @Override
+                    public void onRetry() {
+                        requestAllStations();
+                    }
+                });
             }
         });
     }
