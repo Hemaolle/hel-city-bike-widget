@@ -37,22 +37,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
         allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
         requestBikeCount();
-
-        for (int widgetId : allWidgetIds) {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_layout);
-
-            // Register an onClickListener
-            Intent intent = new Intent(context, MyWidgetProvider.class);
-
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.layout, pendingIntent);
-            appWidgetManager.updateAppWidget(widgetId, remoteViews);
-        }
     }
 
     public void requestBikeCount() {
@@ -84,6 +68,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
                         Log.e(TAG, "No target station selected");
                         remoteViews.setTextViewText(R.id.stationName, "No target station selected");
                     }
+
+                    updateAppWidgetOnClick(context, remoteViews);
 
                     appWidgetManager.updateAppWidget(widgetId, remoteViews);
                 }
@@ -129,6 +115,17 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 R.id.bikeCount, ": " + Integer.toString(bikeCount) + warning);
     }
 
+    private void updateAppWidgetOnClick(Context context, RemoteViews remoteViews) {
+        Intent intent = new Intent(context, MyWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        remoteViews.setOnClickPendingIntent(R.id.widget_root_layout, pendingIntent);
+    }
+
     private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
                                  int[] appWidgetIds) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -145,6 +142,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
             Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
 
             updateStationInfo(remoteViews, targetStation, cachedBikeCount);
+
+            updateAppWidgetOnClick(context, remoteViews);
 
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
