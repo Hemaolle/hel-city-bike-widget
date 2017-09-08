@@ -18,6 +18,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
     AppWidgetManager appWidgetManager;
     int[] allWidgetIds;
     Context context;
+    SharedPreferences preferences;
+    RemoteViews remoteViews;
 
     // Note that onUpdate will be run already before the configuration activity finishes. This is
     // a bug originally from 2009: https://issuetracker.google.com/issues/36908882 (won't fix).
@@ -25,9 +27,12 @@ public class MyWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
+        Log.i(TAG, "Updating all widgets");
         this.context = context;
         this.appWidgetManager = appWidgetManager;
-        Log.i(TAG, "updating widget");
+        remoteViews = new RemoteViews(context.getPackageName(),
+                R.layout.widget_layout);
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         // Always update all the widgets to keep them in sync.
         ComponentName thisWidget = new ComponentName(context,
@@ -42,20 +47,15 @@ public class MyWidgetProvider extends AppWidgetProvider {
             @Override
             public void onResponse(BikeStations stations) {
                 for (int widgetId : allWidgetIds) {
-                    RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                            R.layout.widget_layout);
-
-                    Log.i(TAG, "get preferences for widget id: " + widgetId);
-
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    String selectedStationName = preferences.getString(Integer.toString(widgetId), "");
-
-                    Log.i(TAG, "wigget " + widgetId + " target station: " + selectedStationName);
-
-                    BikeStation station = stations.find(selectedStationName);
+                    String stationName = getTargetStationName(widgetId);
+                    BikeStation station = stations.find(stationName);
                     if (station != null) {
-                        storeCount(preferences, widgetId, station.bikesAvailable);
-                        updateStationInfo(remoteViews, selectedStationName, station.bikesAvailable);
+                        Log.i(TAG, "Update widget: widgetId: " + widgetId +
+                                ", target station: " + stationName +
+                                ", bike count: " + station.bikesAvailable);
+
+                        storeCount(widgetId, station.bikesAvailable);
+                        updateUI(stationName, station.bikesAvailable);
                     }
                     else {
                         Log.e(TAG, "No target station selected");
@@ -66,6 +66,10 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
                     appWidgetManager.updateAppWidget(widgetId, remoteViews);
                 }
+            }
+
+            private String getTargetStationName(int widgetId) {
+                return preferences.getString(Integer.toString(widgetId), "");
             }
 
             @Override
@@ -86,14 +90,14 @@ public class MyWidgetProvider extends AppWidgetProvider {
         });
     }
 
-    private void storeCount(SharedPreferences preferences, int widgetId, int bikeCount) {
+    private void storeCount(int widgetId, int bikeCount) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove(Integer.toString(widgetId) + "_cached_count");
         editor.putInt(Integer.toString(widgetId) + "_cached_count", bikeCount);
         editor.apply();
     }
 
-    private void updateStationInfo(RemoteViews remoteViews, String targetStation, int bikeCount) {
+    private void updateUI(String targetStation, int bikeCount) {
         // Set the text
         remoteViews.setTextViewText(R.id.stationName, targetStation);
 
@@ -134,7 +138,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
 
-            updateStationInfo(remoteViews, targetStation, cachedBikeCount);
+            updateUI(targetStation, cachedBikeCount);
 
             updateAppWidgetOnClick(context, remoteViews);
 
