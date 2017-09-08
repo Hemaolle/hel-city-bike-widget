@@ -51,10 +51,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                     String stationName = getTargetStationName(widgetId);
                     BikeStation station = stations.find(stationName);
                     if (station != null) {
-                        Log.i(TAG, "Update widget: widgetId: " + widgetId +
-                                ", target station: " + stationName +
-                                ", bike count: " + station.bikesAvailable);
-
+                        logWidgetUpdate("Update widget", widgetId, stationName, station.bikesAvailable);
                         storeCount(widgetId, station.bikesAvailable);
                         updateUI(stationName, station.bikesAvailable);
                     }
@@ -67,10 +64,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
                     appWidgetManager.updateAppWidget(widgetId, remoteViews);
                 }
-            }
-
-            private String getTargetStationName(int widgetId) {
-                return preferences.getString(Integer.toString(widgetId), "");
             }
 
             @Override
@@ -86,9 +79,20 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
                 Log.i(TAG, "Bike status request failed, loading from cache. Error: => " + error.toString());
 
-                reloadFromCache(context, appWidgetManager, allWidgetIds);
+                reloadFromCache(context, appWidgetManager);
             }
         });
+    }
+
+    private void logWidgetUpdate(String message, int widgetId, String stationName, int bikeCount) {
+        Log.i(TAG, message +
+                ": widgetId: " + widgetId +
+                ", target station: " + stationName +
+                ", bike count: " + bikeCount);
+    }
+
+    private String getTargetStationName(int widgetId) {
+        return preferences.getString(Integer.toString(widgetId), "");
     }
 
     private void storeCount(int widgetId, int bikeCount) {
@@ -123,26 +127,18 @@ public class MyWidgetProvider extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.widget_root_layout, pendingIntent);
     }
 
-    private void reloadFromCache(Context context, AppWidgetManager appWidgetManager,
-                                 int[] appWidgetIds) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        for (int widgetId : appWidgetIds) {
-            RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
-                    R.layout.widget_layout);
-
-            Log.i(TAG, "get preferences for widget id: " + widgetId);
-
-            String targetStation = preferences.getString(Integer.toString(widgetId), "");
-            int cachedBikeCount = preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
-
-            Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
-
-            updateUI(targetStation, cachedBikeCount);
-
+    private void reloadFromCache(Context context, AppWidgetManager appWidgetManager) {
+        for (int widgetId : allWidgetIds) {
+            String stationName = getTargetStationName(widgetId);
+            int cachedBikeCount = getCachedBikeCount(widgetId);
+            logWidgetUpdate("Reload widget from cache", widgetId, stationName, cachedBikeCount);
+            updateUI(stationName, cachedBikeCount);
             updateAppWidgetOnClick(context, remoteViews);
-
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
+    }
+
+    private int getCachedBikeCount(int widgetId) {
+        return preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
     }
 }
