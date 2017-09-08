@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class BikeApi {
+public class BikeApiClient {
 
     private static final String TAG = ConfigurationActivity.class.getName();
 

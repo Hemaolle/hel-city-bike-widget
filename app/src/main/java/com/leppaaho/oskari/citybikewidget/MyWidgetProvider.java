@@ -40,7 +40,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     }
 
     public void requestBikeCount() {
-        BikeApi.getStations(context, new BikeApi.BikeApiResponseListener() {
+        BikeApiClient.getStations(context, new BikeApiClient.BikeApiResponseListener() {
             @Override
             public void onResponse(List<BikeStation> stations) {
                 for (int widgetId : allWidgetIds) {

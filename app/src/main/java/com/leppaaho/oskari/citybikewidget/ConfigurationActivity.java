@@ -99,7 +99,7 @@ public class ConfigurationActivity extends AppCompatActivity {
     public void requestAllStations() {
         final Activity main = this;
 
-        BikeApi.getStations(this, new BikeApi.BikeApiResponseListener() {
+        BikeApiClient.getStations(this, new BikeApiClient.BikeApiResponseListener() {
             @Override
             public void onResponse(List<BikeStation> stations) {
                 List<String> stationNames = new ArrayList<>();
