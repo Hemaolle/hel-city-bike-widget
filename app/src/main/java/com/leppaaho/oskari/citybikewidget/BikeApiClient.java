@@ -27,9 +27,7 @@ public class BikeApiClient {
         JSONObject data = null;
 
         try {
-            data = new JSONObject(
-                    "{\"query\": \"{ bikeRentalStations { name bikesAvailable } }\" }"
-            );
+            data = new JSONObject(context.getString(R.string.bikeNamesAndAvailabilityQuery));
         } catch (JSONException e) {
             e.printStackTrace();
         }
