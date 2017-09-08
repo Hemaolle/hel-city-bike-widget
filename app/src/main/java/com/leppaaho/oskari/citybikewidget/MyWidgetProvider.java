@@ -31,7 +31,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         this.appWidgetManager = appWidgetManager;
         Log.i(TAG, "updating widget");
 
-        // Get all ids
+        // Always update all the widgets to keep them in sync.
         ComponentName thisWidget = new ComponentName(context,
                 MyWidgetProvider.class);
         allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
