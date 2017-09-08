@@ -28,6 +28,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
         Log.i(TAG, "Updating all widgets");
+
         this.context = context;
         this.appWidgetManager = appWidgetManager;
         remoteViews = new RemoteViews(context.getPackageName(),
@@ -78,7 +79,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 // not entered yet). The widget update seems to be called earlier than
                 // getting a BOOT_COMPLETE Intent though (resulting in this error then),
                 // so loading the bikeStations from the cache here should handle updating the UI
-                // on device reboot quicker. And no need to listen to a BOOT_COMPLETE Intent.
+                // on device reboot quicker than listening to a BOOT_COMPLETE Intent.
 
                 // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
                 // bikeStations once we have network on reboot.
@@ -98,7 +99,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateUI(String targetStation, int bikeCount) {
-        // Set the text
         remoteViews.setTextViewText(R.id.stationName, targetStation);
 
         String warning = "";
