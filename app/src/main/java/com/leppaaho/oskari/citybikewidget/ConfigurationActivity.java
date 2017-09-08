@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigurationActivity extends AppCompatActivity {
@@ -101,11 +100,8 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         BikeApiClient.getStations(this, new BikeApiClient.BikeApiResponseListener() {
             @Override
-            public void onResponse(List<BikeStation> stations) {
-                List<String> stationNames = new ArrayList<>();
-                for (BikeStation s : stations) {
-                    stationNames.add(s.name);
-                }
+            public void onResponse(BikeStations stations) {
+                List<String> stationNames = stations.getNames();
                 final ArrayAdapter<String> adapter = new ArrayAdapter<>(main,
                         android.R.layout.simple_selectable_list_item,  stationNames);
                 allStationsListView.setAdapter(adapter);

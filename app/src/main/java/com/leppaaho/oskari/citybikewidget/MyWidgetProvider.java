@@ -1,7 +1,5 @@
 package com.leppaaho.oskari.citybikewidget;
 
-import java.util.List;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -42,7 +40,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void requestBikeCount() {
         BikeApiClient.getStations(context, new BikeApiClient.BikeApiResponseListener() {
             @Override
-            public void onResponse(List<BikeStation> stations) {
+            public void onResponse(BikeStations stations) {
                 for (int widgetId : allWidgetIds) {
                     RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                             R.layout.widget_layout);
@@ -50,21 +48,16 @@ public class MyWidgetProvider extends AppWidgetProvider {
                     Log.i(TAG, "get preferences for widget id: " + widgetId);
 
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    String targetStation = preferences.getString(Integer.toString(widgetId), "");
+                    String selectedStationName = preferences.getString(Integer.toString(widgetId), "");
 
-                    Log.i(TAG, "wigget " + widgetId + " target station: " + targetStation);
+                    Log.i(TAG, "wigget " + widgetId + " target station: " + selectedStationName);
 
-                    boolean targetFound = false;
-                    for (BikeStation s : stations) {
-                        if (s.name.equals(targetStation)) {
-                            targetFound = true;
-                            storeCount(preferences, widgetId, s.bikesAvailable);
-                            updateStationInfo(remoteViews, targetStation, s.bikesAvailable);
-                            break;
-                        }
+                    BikeStation station = stations.find(selectedStationName);
+                    if (station != null) {
+                        storeCount(preferences, widgetId, station.bikesAvailable);
+                        updateStationInfo(remoteViews, selectedStationName, station.bikesAvailable);
                     }
-
-                    if (!targetFound) {
+                    else {
                         Log.e(TAG, "No target station selected");
                         remoteViews.setTextViewText(R.id.stationName, "No target station selected");
                     }
@@ -80,11 +73,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 // Looks like we may get an error response when rebooting the device (PIN
                 // not entered yet). The widget update seems to be called earlier than
                 // getting a BOOT_COMPLETE Intent though (resulting in this error then),
-                // so loading the data from the cache here should handle updating the UI
+                // so loading the bikeStations from the cache here should handle updating the UI
                 // on device reboot quicker. And no need to listen to a BOOT_COMPLETE Intent.
 
                 // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
-                // data once we have network on reboot.
+                // bikeStations once we have network on reboot.
 
                 Log.i(TAG, "Bike status request failed, loading from cache. Error: => " + error.toString());
 

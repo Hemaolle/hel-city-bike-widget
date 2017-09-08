@@ -7,23 +7,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class BikeApiClient {
 
     private static final String TAG = ConfigurationActivity.class.getName();
 
     public interface BikeApiResponseListener {
-        void onResponse(List<BikeStation > stations);
+        void onResponse(BikeStations stations);
         void onError(String error);
     }
 
@@ -48,14 +42,8 @@ public class BikeApiClient {
                 {
                     @Override
                     public void onResponse(BikeApiResponse response) {
-                        Collections.sort(response.data.stations, new Comparator<BikeStation>() {
-                            @Override
-                            public int compare(BikeStation s1, BikeStation s2) {
-                                return s1.name.compareTo(s2.name);
-                            }
-                        });
-
-                        listener.onResponse(response.data.stations);
+                        response.bikeStations.sort();
+                        listener.onResponse(response.bikeStations);
                     }
                 },
                 new Response.ErrorListener()
