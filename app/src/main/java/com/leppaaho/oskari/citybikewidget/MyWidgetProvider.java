@@ -21,6 +21,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
     int[] allWidgetIds;
     Context context;
 
+    // Note that onUpdate will be run already before the configuration activity finishes. This is
+    // a bug originally from 2009: https://issuetracker.google.com/issues/36908882 (won't fix).
+    // Should be ok though, just have to handle a station not having been selected gracefully.
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
