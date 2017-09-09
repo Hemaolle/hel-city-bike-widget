@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class BikeApiClient {
 
-    private static final String TAG = ConfigurationActivity.class.getName();
+    private static final String TAG = BikeApiClient.class.getName();
 
     public interface BikeApiResponseListener {
         void onResponse(BikeStations stations);
