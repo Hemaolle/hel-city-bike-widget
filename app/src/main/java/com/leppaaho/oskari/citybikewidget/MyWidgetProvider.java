@@ -56,8 +56,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                         updateUI(stationName, station.bikesAvailable);
                     }
                     else {
-                        Log.e(TAG, "No target station selected");
-                        remoteViews.setTextViewText(R.id.stationName, "No target station selected");
+                        updateUI(stationName, "?");
                     }
 
                     updateAppWidgetOnClick(context, remoteViews);
@@ -102,9 +101,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         editor.apply();
     }
 
-    private void updateUI(String targetStation, int bikeCount) {
-        remoteViews.setTextViewText(R.id.stationName, targetStation);
-
+    private void updateUI(String stationName, int bikeCount) {
         String warning = "";
         if (0 < bikeCount && bikeCount < 4) {
             warning = " !";
@@ -112,8 +109,13 @@ public class MyWidgetProvider extends AppWidgetProvider {
         if (bikeCount == 0) {
             warning = " !!";
         }
-        remoteViews.setTextViewText(
-                R.id.bikeCount, ": " + Integer.toString(bikeCount) + warning);
+        String bikeCountString =  Integer.toString(bikeCount) + warning;
+        updateUI(stationName, bikeCountString);
+    }
+
+    private void updateUI(String targetStation, String bikeCountString) {
+        remoteViews.setTextViewText(R.id.stationName, targetStation);
+        remoteViews.setTextViewText(R.id.bikeCount, ": " + bikeCountString);
     }
 
     private void updateAppWidgetOnClick(Context context, RemoteViews remoteViews) {
