@@ -51,7 +51,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
                     String stationName = getTargetStationName(widgetId);
                     BikeStation station = stations.find(stationName);
                     String bikeCount = BikeStation.getBikeCountString(station);
-                    storeCount(widgetId, bikeCount);
                     logWidgetUpdate("Update widget", widgetId, stationName, bikeCount);
                     updateAppWidget(widgetId, stationName, bikeCount);
                 }
@@ -63,11 +62,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
         return preferences.getString(Integer.toString(widgetId), "");
     }
 
-    private void storeCount(int widgetId, String bikeCount) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(Integer.toString(widgetId) + "_cached_count");
-        editor.putString(Integer.toString(widgetId) + "_cached_count", bikeCount);
-        editor.apply();
     }
 
     private void updateAppWidget(int widgetId, String stationName, String bikeCount) {
