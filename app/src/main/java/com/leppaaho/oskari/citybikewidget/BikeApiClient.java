@@ -21,7 +21,9 @@ public class BikeApiClient {
         void onError(String error);
     }
 
-    public static void getStations(Context context, final BikeApiResponseListener listener) {
+    public static Request<BikeApiResponse> getStations(
+            Context context, final BikeApiResponseListener listener)
+    {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String bikeApi = context.getString(R.string.bikeApi);
         JSONObject data = null;
@@ -53,5 +55,6 @@ public class BikeApiClient {
                 }
         );
         queue.add(postRequest);
+        return postRequest;
     }
 }

@@ -1,11 +1,11 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
+import com.android.volley.Request;
 import com.google.gson.Gson;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Provides bike station data. Stores the last seen data locally and falls back to that if the
@@ -17,39 +17,35 @@ public class BikeDataProvider {
         void onResponse(BikeStations stations);
     }
 
-    public static void requestBikeData(final Context context, final BikeStationsListener listener) {
-        BikeApiClient.getStations(context, new BikeApiClient.BikeApiResponseListener() {
+    private static class BikeDataRequest {
+        private Request<BikeApiResponse> request;
 
-            public void onResponse(BikeStations stations) {
-                storeStations(stations, context);
-                listener.onResponse(stations);
-            }
+        public void request(final Context context, final BikeStationsListener listener) {
+            request = BikeApiClient.getStations(context, new BikeApiClient.BikeApiResponseListener() {
 
-            public void onError(String error) {
-                listener.onResponse(retrieveStoredStations(context));
-            }
-        });
-    }
+                public void onResponse(BikeStations stations) {
+                    listener.onResponse(stations);
+                }
 
-    private static void storeStations(BikeStations stations, Context context) {
-
-        // It's not that nice to have to re-serialize the stations since we have them as a string
-        // in GsonRequest and actually Volley also caches the previous response. It might be
-        // possible to be able to find a nicer solution.
-        Gson gson = new Gson();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove("last_bike_station_data");
-        editor.putString("last_bike_station_data", gson.toJson(stations));
-        editor.apply();
-    }
-
-    private static BikeStations retrieveStoredStations(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String storedData = preferences.getString("last_bike_station_data", "");
-        if (storedData.equals("")) {
-            return new BikeStations();
+                public void onError(String error) {
+                    if (request.getCacheEntry() == null)
+                    {
+                        listener.onResponse(new BikeStations());
+                    }
+                    String cachedString = null;
+                    try {
+                        cachedString = new String(request.getCacheEntry().data, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    BikeApiResponse response = new Gson().fromJson(cachedString, BikeApiResponse.class);
+                    listener.onResponse(response.bikeStations);
+                }
+            });
         }
-        return new Gson().fromJson(storedData, BikeStations.class);
+    }
+
+    public static void requestBikeData(final Context context, final BikeStationsListener listener) {
+        new BikeDataRequest().request(context, listener);
     }
 }
