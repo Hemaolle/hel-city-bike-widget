@@ -71,7 +71,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 Log.i(TAG, "Bike status request failed, loading from cache. Error: => "
                         + error.toString());
 
-                reloadFromCache(context, appWidgetManager);
+                reloadWidgetsFromCacheAndUpdate();
             }
         });
     }
@@ -116,7 +116,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.widget_root_layout, pendingIntent);
     }
 
-    private void reloadFromCache(Context context, AppWidgetManager appWidgetManager) {
+    private void reloadWidgetsFromCacheAndUpdate() {
         for (int widgetId : allWidgetIds) {
             String stationName = getTargetStationName(widgetId);
             String cachedBikeCount = getCachedBikeCount(widgetId);
