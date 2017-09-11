@@ -44,7 +44,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     }
 
     public void requestBikeCount() {
-        BikeApiClient.getStations(context, new BikeApiClient.BikeApiResponseListener() {
+        BikeDataProvider.requestBikeData(context, new BikeDataProvider.BikeStationsListener() {
             @Override
             public void onResponse(BikeStations stations) {
                 for (int widgetId : allWidgetIds) {
@@ -55,23 +55,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
                     logWidgetUpdate("Update widget", widgetId, stationName, bikeCount);
                     updateAppWidget(widgetId, stationName, bikeCount);
                 }
-            }
-
-            @Override
-            public void onError(String error) {
-                // Looks like we may get an error response when rebooting the device (PIN
-                // not entered yet). The widget update seems to be called earlier than
-                // getting a BOOT_COMPLETE Intent though (resulting in this error then),
-                // so loading the bikeStations from the cache here should handle updating the UI
-                // on device reboot quicker than listening to a BOOT_COMPLETE Intent.
-
-                // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
-                // bikeStations once we have network on reboot.
-
-                Log.i(TAG, "Bike status request failed, loading from cache. Error: => "
-                        + error.toString());
-
-                reloadWidgetsFromCacheAndUpdate();
             }
         });
     }
@@ -114,19 +97,5 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_root_layout, pendingIntent);
-    }
-
-    private void reloadWidgetsFromCacheAndUpdate() {
-        for (int widgetId : allWidgetIds) {
-            String stationName = getTargetStationName(widgetId);
-            String cachedBikeCount = getCachedBikeCount(widgetId);
-            logWidgetUpdate("Reload widget from cache", widgetId, stationName, cachedBikeCount);
-            updateAppWidget(widgetId, stationName, cachedBikeCount);
-        }
-    }
-
-    private String getCachedBikeCount(int widgetId) {
-        return preferences.getString(Integer.toString(widgetId) + "_cached_count",
-                BikeStation.COUNT_UNKNOWN);
     }
 }
