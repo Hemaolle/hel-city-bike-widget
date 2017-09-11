@@ -50,17 +50,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 for (int widgetId : allWidgetIds) {
                     String stationName = getTargetStationName(widgetId);
                     BikeStation station = stations.find(stationName);
-                    if (station != null) {
-                        logWidgetUpdate("Update widget", widgetId, stationName, station.bikesAvailable);
-                        storeCount(widgetId, station.bikesAvailable);
-                        updateUI(stationName, station.bikesAvailable);
-                    }
-                    else {
-                        updateUI(stationName, "?");
-                    }
-
+                    String bikeCount = BikeStation.getBikeCountString(station);
+                    logWidgetUpdate("Update widget", widgetId, stationName, bikeCount);
+                    storeCount(widgetId, bikeCount);
+                    updateUI(stationName, bikeCount);
                     updateAppWidgetOnClick(context, remoteViews);
-
                     appWidgetManager.updateAppWidget(widgetId, remoteViews);
                 }
             }
@@ -76,41 +70,30 @@ public class MyWidgetProvider extends AppWidgetProvider {
                 // TODO: Might make sense to listen to CONNECTIVITY_ACTION and update the
                 // bikeStations once we have network on reboot.
 
-                Log.i(TAG, "Bike status request failed, loading from cache. Error: => " + error.toString());
+                Log.i(TAG, "Bike status request failed, loading from cache. Error: => "
+                        + error.toString());
 
                 reloadFromCache(context, appWidgetManager);
             }
         });
     }
 
-    private void logWidgetUpdate(String message, int widgetId, String stationName, int bikeCount) {
+    private String getTargetStationName(int widgetId) {
+        return preferences.getString(Integer.toString(widgetId), "");
+    }
+
+    private void logWidgetUpdate(String message, int widgetId, String stationName, String bikeCount) {
         Log.i(TAG, message +
                 ": widgetId: " + widgetId +
                 ", target station: " + stationName +
                 ", bike count: " + bikeCount);
     }
 
-    private String getTargetStationName(int widgetId) {
-        return preferences.getString(Integer.toString(widgetId), "");
-    }
-
-    private void storeCount(int widgetId, int bikeCount) {
+    private void storeCount(int widgetId, String bikeCount) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.remove(Integer.toString(widgetId) + "_cached_count");
-        editor.putInt(Integer.toString(widgetId) + "_cached_count", bikeCount);
+        editor.putString(Integer.toString(widgetId) + "_cached_count", bikeCount);
         editor.apply();
-    }
-
-    private void updateUI(String stationName, int bikeCount) {
-        String warning = "";
-        if (0 < bikeCount && bikeCount < 4) {
-            warning = " !";
-        }
-        if (bikeCount == 0) {
-            warning = " !!";
-        }
-        String bikeCountString =  Integer.toString(bikeCount) + warning;
-        updateUI(stationName, bikeCountString);
     }
 
     private void updateUI(String targetStation, String bikeCountString) {
@@ -132,7 +115,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     private void reloadFromCache(Context context, AppWidgetManager appWidgetManager) {
         for (int widgetId : allWidgetIds) {
             String stationName = getTargetStationName(widgetId);
-            int cachedBikeCount = getCachedBikeCount(widgetId);
+            String cachedBikeCount = getCachedBikeCount(widgetId);
             logWidgetUpdate("Reload widget from cache", widgetId, stationName, cachedBikeCount);
             updateUI(stationName, cachedBikeCount);
             updateAppWidgetOnClick(context, remoteViews);
@@ -140,7 +123,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private int getCachedBikeCount(int widgetId) {
-        return preferences.getInt(Integer.toString(widgetId) + "_cached_count", 0);
+    private String getCachedBikeCount(int widgetId) {
+        return preferences.getString(Integer.toString(widgetId) + "_cached_count",
+                BikeStation.COUNT_UNKNOWN);
     }
 }
