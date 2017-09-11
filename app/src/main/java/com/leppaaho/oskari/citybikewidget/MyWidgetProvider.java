@@ -62,19 +62,17 @@ public class MyWidgetProvider extends AppWidgetProvider {
         return preferences.getString(Integer.toString(widgetId), "");
     }
 
+    private void logWidgetUpdate(String message, int widgetId, String stationName, String bikeCount) {
+        Log.i(TAG, message +
+                ": widgetId: " + widgetId +
+                ", target station: " + stationName +
+                ", bike count: " + bikeCount);
     }
 
     private void updateAppWidget(int widgetId, String stationName, String bikeCount) {
         updateUI(stationName, bikeCount);
         updateAppWidgetOnClick(context, remoteViews);
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
-    }
-
-    private void logWidgetUpdate(String message, int widgetId, String stationName, String bikeCount) {
-        Log.i(TAG, message +
-                ": widgetId: " + widgetId +
-                ", target station: " + stationName +
-                ", bike count: " + bikeCount);
     }
 
     private void updateUI(String targetStation, String bikeCountString) {
