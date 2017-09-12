@@ -5,5 +5,6 @@
     android:minHeight="60dp"
     android:minWidth="40dp"
     android:updatePeriodMillis="300000"
-    android:configure="com.leppaaho.oskari.citybikewidget.ConfigurationActivity">
+    android:configure="com.leppaaho.oskari.citybikewidget.ConfigurationActivity"
+    android:previewImage="@drawable/preview">
 </appwidget-provider>

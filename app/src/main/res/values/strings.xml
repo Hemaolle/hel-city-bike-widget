@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Citybike Widget</string>
+    <string name="app_name">A HEL City Bikes</string>
     <string name="action_settings">Settings</string>
     <string name="bikeApi">http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql</string>
     <string name="bikeNamesAndAvailabilityQuery">{\"query\": \"{ bikeRentalStations { name bikesAvailable } }\" }</string>
