@@ -6,6 +6,7 @@ public class BikeStation {
     private static final String ZERO_COUNT_WARNING = " !!";
     private static final int LOW_COUNT_WARNING_LIMIT = 3;
 
+    @SuppressWarnings("unused")
     public String name;
 
     private int bikesAvailable;
