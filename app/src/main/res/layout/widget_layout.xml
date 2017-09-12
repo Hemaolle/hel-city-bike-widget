@@ -18,6 +18,7 @@
             android:layout_height="30sp"
             android:layout_marginLeft="5sp"
             android:src="@drawable/bike"
+            android:contentDescription="Bike count:"
             />
 
         <TextView
