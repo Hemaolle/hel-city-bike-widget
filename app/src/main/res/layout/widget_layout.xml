@@ -17,6 +17,9 @@
             android:layout_width="30sp"
             android:layout_height="30sp"
             android:layout_marginLeft="5sp"
+            android:layout_marginRight="0sp"
+            android:layout_marginStart="5sp"
+            android:layout_marginEnd="0sp"
             android:src="@drawable/bike"
             android:contentDescription="@string/bikeCountImageDescription"
             />
