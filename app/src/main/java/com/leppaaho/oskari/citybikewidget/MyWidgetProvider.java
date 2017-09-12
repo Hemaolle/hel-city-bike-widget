@@ -27,6 +27,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
+        // TODO: The logging level should probably be raised.
         Log.i(TAG, "Updating all widgets");
 
         this.context = context;
