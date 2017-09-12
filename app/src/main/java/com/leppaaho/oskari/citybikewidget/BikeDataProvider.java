@@ -1,6 +1,7 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.google.gson.Gson;
@@ -12,6 +13,8 @@ import java.io.UnsupportedEncodingException;
  * BikeApiClient fails.
  */
 public class BikeDataProvider {
+
+    private static final String TAG = BikeDataProvider.class.getSimpleName();
 
     public interface BikeStationsListener {
         void onResponse(BikeStations stations);
@@ -28,6 +31,7 @@ public class BikeDataProvider {
                 }
 
                 public void onError(String error) {
+                    Log.i(TAG, "Bike data request failed, use the cached entry");
                     if (request.getCacheEntry() == null)
                     {
                         listener.onResponse(new BikeStations());

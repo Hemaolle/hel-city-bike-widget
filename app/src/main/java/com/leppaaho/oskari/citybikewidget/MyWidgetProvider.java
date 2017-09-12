@@ -51,7 +51,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
                     String stationName = getTargetStationName(widgetId);
                     BikeStation station = stations.find(stationName);
                     String bikeCount = BikeStation.getBikeCountString(station);
-                    logWidgetUpdate("Update widget", widgetId, stationName, bikeCount);
+                    logWidgetUpdate(widgetId, stationName, bikeCount);
                     updateAppWidget(widgetId, stationName, bikeCount);
                 }
             }
@@ -62,9 +62,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
         return preferences.getString(Integer.toString(widgetId), "");
     }
 
-    private void logWidgetUpdate(String message, int widgetId, String stationName, String bikeCount) {
-        Log.i(TAG, message +
-                ": widgetId: " + widgetId +
+    private void logWidgetUpdate(int widgetId, String stationName, String bikeCount) {
+        Log.i(TAG, "Update widget: widgetId: " + widgetId +
                 ", target station: " + stationName +
                 ", bike count: " + bikeCount);
     }
