@@ -34,13 +34,9 @@
             android:textColor="@android:color/background_light" />
     </LinearLayout>
 
-
-
-
-
         <TextView
             android:id="@+id/stationName"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -49,6 +45,5 @@
             android:text="Static Text"
             android:textAlignment="center"
             android:textColor="@android:color/background_light" />
-
 
 </LinearLayout>
