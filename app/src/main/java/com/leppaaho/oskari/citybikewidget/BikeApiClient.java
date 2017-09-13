@@ -1,7 +1,6 @@
 package com.leppaaho.oskari.citybikewidget;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,8 +12,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class BikeApiClient {
-
-    private static final String TAG = BikeApiClient.class.getName();
 
     public interface BikeApiResponseListener {
         void onResponse(BikeStations stations);
@@ -33,8 +30,6 @@ class BikeApiClient {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Log.i(TAG, data.toString());
 
         GsonRequest<BikeApiResponse> postRequest = new GsonRequest<>(
                 bikeApi, data, BikeApiResponse.class,
