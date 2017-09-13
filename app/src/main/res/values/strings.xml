@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">A HEL City Bikes</string>
-    <string name="bikeApi">http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql</string>
-    <string name="bikeNamesAndAvailabilityQuery">{\"query\": \"{ bikeRentalStations { name bikesAvailable } }\" }</string>
-    <string name="unknownBikeCount">\?</string>
-    <string name="stationNamePlaceholder">Station name</string>
-    <string name="bikeCountImageDescription">Bike count:</string>
+    <string name="bike_api">http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql</string>
+    <string name="bike_names_and_availability_query">{\"query\": \"{ bikeRentalStations { name bikesAvailable } }\" }</string>
+    <string name="unknown_bike_count">\?</string>
+    <string name="station_name_placeholder">Station name</string>
+    <string name="bike_count_image_description">Bike count:</string>
 </resources>

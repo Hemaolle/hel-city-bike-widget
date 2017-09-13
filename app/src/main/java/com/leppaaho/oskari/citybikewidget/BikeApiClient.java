@@ -22,11 +22,11 @@ class BikeApiClient {
             Context context, final BikeApiResponseListener listener)
     {
         RequestQueue queue = Volley.newRequestQueue(context);
-        final String bikeApi = context.getString(R.string.bikeApi);
+        final String bikeApi = context.getString(R.string.bike_api);
         JSONObject data = null;
 
         try {
-            data = new JSONObject(context.getString(R.string.bikeNamesAndAvailabilityQuery));
+            data = new JSONObject(context.getString(R.string.bike_names_and_availability_query));
         } catch (JSONException e) {
             e.printStackTrace();
         }

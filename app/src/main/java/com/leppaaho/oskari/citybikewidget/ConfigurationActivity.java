@@ -46,7 +46,7 @@ public class ConfigurationActivity extends AppCompatActivity {
             return;
         }
 
-        allStationsListView = (ListView) findViewById(R.id.listview);
+        allStationsListView = (ListView) findViewById(R.id.stations_list);
 
         allStationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

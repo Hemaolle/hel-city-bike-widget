@@ -77,8 +77,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     private void updateUI(String targetStation, String bikeCountString) {
         // TODO: Finnish hyphenation would be nice for long station names.
-        remoteViews.setTextViewText(R.id.stationName, targetStation);
-        remoteViews.setTextViewText(R.id.bikeCount, ": " + bikeCountString);
+        remoteViews.setTextViewText(R.id.station_name, targetStation);
+        remoteViews.setTextViewText(R.id.bike_count, ": " + bikeCountString);
     }
 
     private void updateAppWidgetOnClick(Context context, RemoteViews remoteViews) {

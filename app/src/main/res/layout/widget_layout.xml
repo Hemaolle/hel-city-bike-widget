@@ -22,31 +22,31 @@
             android:layout_marginStart="5sp"
             android:layout_marginEnd="0sp"
             android:src="@drawable/bike"
-            android:contentDescription="@string/bikeCountImageDescription"
+            android:contentDescription="@string/bike_count_image_description"
             />
 
         <TextView
-            android:id="@+id/bikeCount"
+            android:id="@+id/bike_count"
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="2dip"
             android:gravity="start|center_vertical"
-            android:text="@string/unknownBikeCount"
+            android:text="@string/unknown_bike_count"
             android:textAlignment="textStart"
             android:textColor="@android:color/background_light" />
     </LinearLayout>
 
         <TextView
-            android:id="@+id/stationName"
+            android:id="@+id/station_name"
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_margin="0dip"
             android:gravity="center_horizontal|bottom"
-            android:text="@string/stationNamePlaceholder"
+            android:text="@string/station_name_placeholder"
             android:textAlignment="center"
             android:textColor="@android:color/background_light" />
 
