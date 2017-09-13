@@ -23,7 +23,6 @@ public class ConfigurationActivity extends AppCompatActivity {
     private ListView allStationsListView;
     private Context applicationContext;
     private SharedPreferences sharedPreferences;
-    private AppWidgetManager widgetManager;
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
@@ -37,7 +36,6 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         applicationContext = getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        widgetManager = AppWidgetManager.getInstance(this);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
