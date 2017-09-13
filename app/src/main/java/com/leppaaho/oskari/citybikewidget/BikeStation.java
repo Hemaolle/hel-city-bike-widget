@@ -1,7 +1,7 @@
 package com.leppaaho.oskari.citybikewidget;
 
-public class BikeStation {
-    public static final String COUNT_UNKNOWN = "?";
+class BikeStation {
+    private static final String COUNT_UNKNOWN = "?";
     private static final String LOW_COUNT_WARNING = "  !";
     private static final String ZERO_COUNT_WARNING = " !!";
     private static final int LOW_COUNT_WARNING_LIMIT = 3;

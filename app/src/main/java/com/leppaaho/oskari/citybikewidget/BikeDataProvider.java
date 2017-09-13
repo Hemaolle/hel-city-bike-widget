@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
  * Provides bike station data. Stores the last seen data locally and falls back to that if the
  * BikeApiClient fails.
  */
-public class BikeDataProvider {
+class BikeDataProvider {
 
     private static final String TAG = BikeDataProvider.class.getSimpleName();
 

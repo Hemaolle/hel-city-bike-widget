@@ -12,7 +12,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class BikeApiClient {
+class BikeApiClient {
 
     private static final String TAG = BikeApiClient.class.getName();
 

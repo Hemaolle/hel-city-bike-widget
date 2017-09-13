@@ -20,11 +20,11 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     private static final String TAG = ConfigurationActivity.class.getName();
 
-    ListView allStationsListView;
-    Context applicationContext;
-    SharedPreferences sharedPreferences;
-    AppWidgetManager widgetManager;
-    int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private ListView allStationsListView;
+    private Context applicationContext;
+    private SharedPreferences sharedPreferences;
+    private AppWidgetManager widgetManager;
+    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +95,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         requestAllStations();
     }
 
-    public void requestAllStations() {
+    private void requestAllStations() {
         final Activity main = this;
 
         BikeApiClient.getStations(this, new BikeApiClient.BikeApiResponseListener() {

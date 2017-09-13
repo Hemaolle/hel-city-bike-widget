@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-public class BikeStations implements Iterable<BikeStation>{
+class BikeStations implements Iterable<BikeStation>{
 
     @SerializedName("bikeRentalStations")
     private List<BikeStation> stations;

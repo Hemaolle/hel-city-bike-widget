@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 
-public class ErrorDialog {
+class ErrorDialog {
 
     public interface ResultListener {
         void onCancel();

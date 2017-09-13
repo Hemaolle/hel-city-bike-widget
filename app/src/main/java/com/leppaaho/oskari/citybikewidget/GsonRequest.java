@@ -20,14 +20,14 @@ import java.io.UnsupportedEncodingException;
  * https://github.com/google/volley/blob/master/src/main/java/com/android/volley/toolbox/JsonRequest.java,
  * https://github.com/google/volley/blob/master/src/main/java/com/android/volley/toolbox/JsonObjectRequest.java
  */
-public class GsonRequest<T> extends Request<T> {
+class GsonRequest<T> extends Request<T> {
     private final Gson gson = new Gson();
     private final Class<T> clazz;
     private final Response.Listener<T> listener;
     private final String mRequestBody;
 
     /** Default charset for JSON request. */
-    protected static final String PROTOCOL_CHARSET = "utf-8";
+    private static final String PROTOCOL_CHARSET = "utf-8";
 
     /** Content type for request. */
     private static final String PROTOCOL_CONTENT_TYPE =

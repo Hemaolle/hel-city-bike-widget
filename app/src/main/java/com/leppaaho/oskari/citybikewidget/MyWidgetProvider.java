@@ -15,11 +15,11 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = MyWidgetProvider.class.getName();
 
-    AppWidgetManager appWidgetManager;
-    int[] allWidgetIds;
-    Context context;
-    SharedPreferences preferences;
-    RemoteViews remoteViews;
+    private AppWidgetManager appWidgetManager;
+    private int[] allWidgetIds;
+    private Context context;
+    private SharedPreferences preferences;
+    private RemoteViews remoteViews;
 
     // Note that onUpdate will be run already before the configuration activity finishes. This is
     // a bug originally from 2009: https://issuetracker.google.com/issues/36908882 (won't fix).
@@ -44,7 +44,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         requestBikeCount();
     }
 
-    public void requestBikeCount() {
+    private void requestBikeCount() {
         BikeDataProvider.requestBikeData(context, new BikeDataProvider.BikeStationsListener() {
             @Override
             public void onResponse(BikeStations stations) {
