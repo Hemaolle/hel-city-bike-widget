@@ -11,7 +11,7 @@ import java.util.List;
 class BikeStations implements Iterable<BikeStation>{
 
     @SerializedName("bikeRentalStations")
-    private List<BikeStation> stations;
+    private final List<BikeStation> stations;
 
     public BikeStations() {
         stations = new ArrayList<>();

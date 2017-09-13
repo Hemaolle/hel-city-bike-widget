@@ -5,5 +5,9 @@ import com.google.gson.annotations.SerializedName;
 class BikeApiResponse {
     @SuppressWarnings("unused")
     @SerializedName("data")
-    public BikeStations bikeStations;
+    public final BikeStations bikeStations;
+
+    BikeApiResponse(BikeStations bikeStations) {
+        this.bikeStations = bikeStations;
+    }
 }

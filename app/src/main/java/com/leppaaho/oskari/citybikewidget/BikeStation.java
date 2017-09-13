@@ -6,10 +6,17 @@ class BikeStation {
     private static final String ZERO_COUNT_WARNING = " !!";
     private static final int LOW_COUNT_WARNING_LIMIT = 3;
 
+    // Filled by deserialization from Gson.
     @SuppressWarnings("unused")
-    public String name;
+    public final String name;
+    private final int bikesAvailable;
 
-    private int bikesAvailable;
+    // Required to fix final field not initialized error.
+    @SuppressWarnings("unused")
+    BikeStation(String name, int bikesAvailable) {
+        this.name = name;
+        this.bikesAvailable = bikesAvailable;
+    }
 
     public static String getBikeCountString(BikeStation station) {
         if (station == null) {
