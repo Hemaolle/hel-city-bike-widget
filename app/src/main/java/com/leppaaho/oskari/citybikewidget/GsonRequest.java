@@ -33,9 +33,9 @@ public class GsonRequest<T> extends Request<T> {
     private static final String PROTOCOL_CONTENT_TYPE =
             String.format("application/json; charset=%s", PROTOCOL_CHARSET);
 
-    public GsonRequest(int method, String url, JSONObject jsonRequest, Class<T> clazz,
+    public GsonRequest(String url, JSONObject jsonRequest, Class<T> clazz,
                        Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        super(method, url, errorListener);
+        super(Method.POST, url, errorListener);
         this.clazz = clazz;
         this.mRequestBody = jsonRequest.toString();
         this.listener = listener;

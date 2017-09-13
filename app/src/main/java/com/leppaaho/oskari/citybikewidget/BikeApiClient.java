@@ -37,7 +37,7 @@ public class BikeApiClient {
         Log.i(TAG, data.toString());
 
         GsonRequest<BikeApiResponse> postRequest = new GsonRequest<>(
-                Request.Method.POST, bikeApi, data, BikeApiResponse.class,
+                bikeApi, data, BikeApiResponse.class,
                 new Response.Listener<BikeApiResponse>()
                 {
                     @Override
