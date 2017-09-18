@@ -24,7 +24,7 @@ class GsonRequest<T> extends Request<T> {
     private final Gson gson = new Gson();
     private final Class<T> clazz;
     private final Response.Listener<T> listener;
-    private final String mRequestBody;
+    private final String requestBody;
 
     /** Default charset for JSON request. */
     private static final String PROTOCOL_CHARSET = "utf-8";
@@ -37,7 +37,7 @@ class GsonRequest<T> extends Request<T> {
                        Response.Listener<T> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         this.clazz = clazz;
-        this.mRequestBody = jsonRequest.toString();
+        this.requestBody = jsonRequest.toString();
         this.listener = listener;
     }
 
@@ -49,10 +49,10 @@ class GsonRequest<T> extends Request<T> {
     @Override
     public byte[] getBody() {
         try {
-            return mRequestBody == null ? null : mRequestBody.getBytes(PROTOCOL_CHARSET);
+            return requestBody == null ? null : requestBody.getBytes(PROTOCOL_CHARSET);
         } catch (UnsupportedEncodingException uee) {
             VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                    mRequestBody, PROTOCOL_CHARSET);
+                    requestBody, PROTOCOL_CHARSET);
             return null;
         }
     }
