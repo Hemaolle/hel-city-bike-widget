@@ -71,7 +71,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
             // Triggers the onUpdate method in the WidgetProvider.
             private void sendAppWidgetUpdateIntent(int appWidgetId) {
-                Intent intent = new Intent(applicationContext, MyWidgetProvider.class);
+                Intent intent = new Intent(context, AppWidget.class);
                 intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
                 // Use an array and EXTRA_APPWIDGET_IDS instead of

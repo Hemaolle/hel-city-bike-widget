@@ -11,8 +11,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-public class MyWidgetProvider extends AppWidgetProvider {
-    private static final String TAG = MyWidgetProvider.class.getName();
+public class AppWidget extends AppWidgetProvider {
+    private static final String TAG = AppWidget.class.getName();
 
     private AppWidgetManager appWidgetManager;
     private int[] allWidgetIds;
@@ -37,7 +37,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
         // Always update all the widgets to keep them in sync.
         ComponentName thisWidget = new ComponentName(context,
-                MyWidgetProvider.class);
+                AppWidget.class);
         allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
         requestBikeCount();
@@ -81,7 +81,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateAppWidgetOnClick(Context context, RemoteViews remoteViews) {
-        Intent intent = new Intent(context, MyWidgetProvider.class);
+        Intent intent = new Intent(context, AppWidget.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
 
