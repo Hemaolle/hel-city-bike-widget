@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">A HEL City Bikes</string>
+    <string name="app_name">HEL City Bikes</string>
     <string name="bike_api">http://api.digitransit.fi/routing/v1/routers/hsl/index/graphql</string>
     <string name="bike_names_and_availability_query">{\"query\": \"{ bikeRentalStations { name bikesAvailable } }\" }</string>
     <string name="unknown_bike_count">\?</string>
