@@ -9,6 +9,7 @@ class ErrorDialog {
 
     public interface ResultListener {
         void onCancel();
+
         void onRetry();
     }
 

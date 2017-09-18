@@ -13,7 +13,6 @@ import java.io.UnsupportedEncodingException;
  * BikeApiClient fails.
  */
 class BikeDataProvider {
-
     private static final String TAG = BikeDataProvider.class.getSimpleName();
 
     public interface BikeStationsListener {

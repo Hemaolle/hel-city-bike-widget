@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 public class MyWidgetProvider extends AppWidgetProvider {
-
     private static final String TAG = MyWidgetProvider.class.getName();
 
     private AppWidgetManager appWidgetManager;
@@ -64,18 +63,18 @@ public class MyWidgetProvider extends AppWidgetProvider {
     }
 
     private void logWidgetUpdate(int widgetId, String stationName, String bikeCount) {
-        Log.i(TAG, "Update widget: widgetId: " + widgetId +
-                ", target station: " + stationName +
-                ", bike count: " + bikeCount);
+        Log.i(TAG, "Update widget: widgetId: " + widgetId
+                + ", target station: " + stationName
+                + ", bike count: " + bikeCount);
     }
 
     private void updateAppWidget(int widgetId, String stationName, String bikeCount) {
-        updateUI(stationName, bikeCount);
+        updateUi(stationName, bikeCount);
         updateAppWidgetOnClick(context, remoteViews);
         appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    private void updateUI(String targetStation, String bikeCountString) {
+    private void updateUi(String targetStation, String bikeCountString) {
         // TODO: Finnish hyphenation would be nice for long station names.
         remoteViews.setTextViewText(R.id.station_name, targetStation);
         remoteViews.setTextViewText(R.id.bike_count, ": " + bikeCountString);

@@ -8,8 +8,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-class BikeStations implements Iterable<BikeStation>{
-
+class BikeStations implements Iterable<BikeStation> {
     @SerializedName("bikeRentalStations")
     private final List<BikeStation> stations;
 
@@ -23,8 +22,8 @@ class BikeStations implements Iterable<BikeStation>{
     }
 
     public BikeStation find(String name) {
-        for(BikeStation station : stations) {
-            if(station.name.equals(name)) {
+        for (BikeStation station : stations) {
+            if (station.name.equals(name)) {
                 return station;
             }
         }

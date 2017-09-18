@@ -12,15 +12,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class BikeApiClient {
-
     public interface BikeApiResponseListener {
         void onResponse(BikeStations stations);
+
         void onError(String error);
     }
 
     public static Request<BikeApiResponse> getStations(
-            Context context, final BikeApiResponseListener listener)
-    {
+            Context context, final BikeApiResponseListener listener) {
         RequestQueue queue = Volley.newRequestQueue(context);
         final String bikeApi = context.getString(R.string.bike_api);
         JSONObject data = null;
@@ -33,16 +32,14 @@ class BikeApiClient {
 
         GsonRequest<BikeApiResponse> postRequest = new GsonRequest<>(
                 bikeApi, data, BikeApiResponse.class,
-                new Response.Listener<BikeApiResponse>()
-                {
+                new Response.Listener<BikeApiResponse>() {
                     @Override
                     public void onResponse(BikeApiResponse response) {
                         response.bikeStations.sort();
                         listener.onResponse(response.bikeStations);
                     }
                 },
-                new Response.ErrorListener()
-                {
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         listener.onError(error.toString());

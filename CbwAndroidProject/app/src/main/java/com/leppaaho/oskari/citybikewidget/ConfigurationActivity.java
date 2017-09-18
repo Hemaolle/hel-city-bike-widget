@@ -17,7 +17,6 @@ import android.widget.ListView;
 import java.util.List;
 
 public class ConfigurationActivity extends AppCompatActivity {
-
     private static final String TAG = ConfigurationActivity.class.getName();
 
     private ListView allStationsListView;
@@ -39,7 +38,8 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
         }
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
@@ -53,7 +53,8 @@ public class ConfigurationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                 String selectedStation = adapter.getItemAtPosition(position).toString();
 
-                Log.i(TAG, "target station for widget " + appWidgetId + " selected: " + selectedStation);
+                Log.i(TAG, "target station for widget " + appWidgetId + " selected: "
+                        + selectedStation);
 
                 saveAppWidgetStation(selectedStation, appWidgetId);
                 sendAppWidgetUpdateIntent(appWidgetId);
@@ -73,8 +74,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                 Intent intent = new Intent(applicationContext, MyWidgetProvider.class);
                 intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
-                // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
-                // since it seems the onUpdate() is only fired like this.
+                // Use an array and EXTRA_APPWIDGET_IDS instead of
+                // AppWidgetManager.EXTRA_APPWIDGET_ID, since it seems the onUpdate() is only fired
+                // like this.
                 int[] ids = {appWidgetId};
 
                 intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
