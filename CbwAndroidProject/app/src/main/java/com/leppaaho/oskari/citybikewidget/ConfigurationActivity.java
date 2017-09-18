@@ -20,7 +20,7 @@ public class ConfigurationActivity extends AppCompatActivity {
     private static final String TAG = ConfigurationActivity.class.getName();
 
     private ListView allStationsListView;
-    private Context applicationContext;
+    private Context context;
     private SharedPreferences sharedPreferences;
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
@@ -33,7 +33,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_configuration);
 
-        applicationContext = getApplicationContext();
+        context = this;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Bundle extras = getIntent().getExtras();
