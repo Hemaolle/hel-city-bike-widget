@@ -16,13 +16,17 @@ import android.widget.ListView;
 
 import java.util.List;
 
+/**
+ * The activity shown when the user adds a new widget. Allows the user to select the city bike
+ * station for which the added widget displays the number of the bikes.
+ */
 public class ConfigurationActivity extends AppCompatActivity {
     private static final String TAG = ConfigurationActivity.class.getName();
 
     private ListView allStationsListView;
     private Context context;
     private SharedPreferences sharedPreferences;
-    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID; // Id for the widget being added.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
