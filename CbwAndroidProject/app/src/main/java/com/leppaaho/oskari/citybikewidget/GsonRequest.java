@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * A Volley request that uses Gson to deserialize a json response to an object of type T.
+ *
  * Modified from the Android documentation example:
  * https://developer.android.com/training/volley/request-custom.html
  * took inspiration from Volley JsonRequest and JsonObjectRequest to add support for the POST method:

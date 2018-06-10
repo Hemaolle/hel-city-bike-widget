@@ -27,7 +27,6 @@ class BikeStations implements Iterable<BikeStation> {
                 return station;
             }
         }
-
         return null;
     }
 

@@ -3,6 +3,7 @@ package com.leppaaho.oskari.citybikewidget;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.google.gson.Gson;
 
@@ -31,13 +32,14 @@ class BikeDataProvider {
 
                 public void onError(String error) {
                     Log.i(TAG, "Bike data request failed, use the cached entry");
-                    if (request.getCacheEntry() == null)
+                    Cache.Entry cacheEntry = request.getCacheEntry();
+                    if (cacheEntry == null)
                     {
                         listener.onResponse(new BikeStations());
                     }
                     String cachedString = null;
                     try {
-                        cachedString = new String(request.getCacheEntry().data, "utf-8");
+                        cachedString = new String(cacheEntry.data, "utf-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
