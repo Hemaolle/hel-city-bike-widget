@@ -11,6 +11,9 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * An interface to the city bike REST api.
+ */
 class BikeApiClient {
     public interface BikeApiResponseListener {
         void onResponse(BikeStations stations);
@@ -20,18 +23,20 @@ class BikeApiClient {
 
     public static Request<BikeApiResponse> getStations(
             Context context, final BikeApiResponseListener listener) {
+
+        // Using Volley for simpler HTTP requests.
         RequestQueue queue = Volley.newRequestQueue(context);
         final String bikeApi = context.getString(R.string.bike_api);
-        JSONObject data = null;
+        JSONObject query = null;
 
         try {
-            data = new JSONObject(context.getString(R.string.bike_names_and_availability_query));
+            query = new JSONObject(context.getString(R.string.bike_names_and_availability_query));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         GsonRequest<BikeApiResponse> postRequest = new GsonRequest<>(
-                bikeApi, data, BikeApiResponse.class,
+                bikeApi, query, BikeApiResponse.class,
                 new Response.Listener<BikeApiResponse>() {
                     @Override
                     public void onResponse(BikeApiResponse response) {
