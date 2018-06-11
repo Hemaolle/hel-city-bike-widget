@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kaupunkipyörä-widgetti</string>
+    <string name="bike_count_image_description">Pyörien määrä:</string>
+    <string name="station_name_placeholder">Aseman nimi</string>
+</resources>
